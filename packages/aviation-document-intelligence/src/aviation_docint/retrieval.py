@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from datetime import datetime, timezone
 from typing import Any
 
 from .models import Evidence, EvidencePack, SearchHit
@@ -12,6 +13,15 @@ class Retriever:
     def __init__(self, store: Store, vectors: EmbeddingIndex | None = None):
         self.store = store
         self.vectors = vectors
+
+    @staticmethod
+    def _matches_filters(row: dict[str, Any], filters: dict[str, Any]) -> bool:
+        for key in ("authority", "jurisdiction", "status", "document_type"):
+            if filters.get(key) and row.get(key) != filters[key]:
+                return False
+        if filters.get("current_only") and row.get("status") != "CURRENT":
+            return False
+        return True
 
     @staticmethod
     def _authority_boost(hit: SearchHit, filters: dict[str, Any]) -> float:
@@ -30,14 +40,16 @@ class Retriever:
         lexical = self.store.lexical_search(query, candidate_limit, filters)
         vector_hits: list[tuple[str, float]] = []
         if use_vector and self.vectors:
-            vector_hits = self.vectors.search(query, candidate_limit)
+            vector_hits = self.vectors.search(query, candidate_limit * 3)
 
         by_id: dict[str, SearchHit] = {hit.chunk_id: hit for hit in lexical}
-        for rank, (chunk_id, score) in enumerate(vector_hits, 1):
+        filtered_vector: list[tuple[str, float]] = []
+        for chunk_id, score in vector_hits:
+            rows = self.store.get_chunks([chunk_id])
+            if not rows or not self._matches_filters(rows[0], filters):
+                continue
+            filtered_vector.append((chunk_id, score))
             if chunk_id not in by_id:
-                rows = self.store.get_chunks([chunk_id])
-                if not rows:
-                    continue
                 row = rows[0]
                 by_id[chunk_id] = SearchHit(
                     chunk_id=chunk_id,
@@ -47,14 +59,17 @@ class Retriever:
                     score=0.0,
                     metadata={"authority": row["authority"], "jurisdiction": row["jurisdiction"], "status": row["status"],
                               "version": row["version"], "source_url": row["source_url"], "section": row["section"],
-                              "paragraph": row["paragraph"], "page_start": row["page_start"], "page_end": row["page_end"]},
+                              "paragraph": row["paragraph"], "page_start": row["page_start"], "page_end": row["page_end"],
+                              "document_type": row.get("document_type")},
                 )
             by_id[chunk_id].vector_score = score
+            if len(filtered_vector) >= candidate_limit:
+                break
 
         ranked: dict[str, float] = defaultdict(float)
         for rank, hit in enumerate(lexical, 1):
             ranked[hit.chunk_id] += 1.0 / (60 + rank)
-        for rank, (chunk_id, _) in enumerate(vector_hits, 1):
+        for rank, (chunk_id, _) in enumerate(filtered_vector, 1):
             ranked[chunk_id] += 1.0 / (60 + rank)
 
         scored: list[SearchHit] = []
@@ -65,7 +80,7 @@ class Retriever:
             scored.append(hit)
         scored.sort(key=lambda h: h.score, reverse=True)
 
-        # Lightweight lexical/entity reranking. Exact regulatory identifiers receive a modest boost.
+        # Lightweight identifier/entity reranking. A production reranker can be plugged in later.
         lowered = query.lower()
         tokens = [t for t in lowered.replace("/", " ").split() if len(t) >= 2]
         for hit in scored:
@@ -92,7 +107,12 @@ class Retriever:
         ) for h in scored[:limit]]
 
         abstain = not evidences or evidences[0].score < 0.005
-        return EvidencePack(query=query, generated_at=__import__("datetime").datetime.now(__import__("datetime").timezone.utc),
-                            evidences=evidences, filters=filters, retrieval_method="hybrid" if vector_hits else "lexical",
-                            abstain=abstain,
-                            abstain_reason="No sufficiently relevant indexed evidence was found." if abstain else None)
+        return EvidencePack(
+            query=query,
+            generated_at=datetime.now(timezone.utc),
+            evidences=evidences,
+            filters=filters,
+            retrieval_method="hybrid" if filtered_vector else "lexical",
+            abstain=abstain,
+            abstain_reason="No sufficiently relevant indexed evidence was found." if abstain else None,
+        )
