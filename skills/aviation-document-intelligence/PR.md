@@ -1,0 +1,1 @@
+Pull request summary: reusable aviation document intelligence architecture, official-source manifest, reproducible corpus downloader, CI artifact build, version-aware retrieval policy, evaluation cases, and SAFA integration guidance.

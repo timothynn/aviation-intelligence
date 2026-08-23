@@ -1,0 +1,80 @@
+version: 1
+name: aviation-regulatory-retrieval
+
+default_query_mode: hybrid
+
+status_preference:
+  - CURRENT
+  - UNKNOWN
+  - HISTORICAL
+  - DRAFT
+  - SUPERSEDED
+  - WITHDRAWN
+
+source_preference:
+  - authority_primary
+  - legal_register
+  - regulator_publication
+  - approved_technical_source
+  - historical_authority_material
+  - secondary_material
+
+ranking:
+  lexical_weight: 0.35
+  vector_weight: 0.35
+  reranker_weight: 0.20
+  authority_weight: 0.10
+
+required_metadata:
+  - authority
+  - jurisdiction
+  - document_id
+  - title
+  - version
+  - status
+  - publication_date
+  - source_url
+
+regulatory_query_rules:
+  current_requirement:
+    prefer_status: CURRENT
+    require_authority_match: true
+    require_jurisdiction_match: true
+  historical_requirement:
+    require_effective_date_resolution: true
+  exact_identifier:
+    lexical_first: true
+  technical_defect:
+    prefer_document_types:
+      - regulation
+      - amc_gm
+      - technical_guidance
+      - approved_technical_document
+    require_source_reference: true
+
+abstention:
+  insufficient_evidence: true
+  conflicting_current_sources: true
+  unknown_version: true
+  unresolved_applicability: true
+
+answer_contract:
+  citations_required: true
+  source_version_required: true
+  page_or_paragraph_preferred: true
+  unsupported_regulatory_claims_forbidden: true
+
+ai_boundaries:
+  can:
+    - search
+    - summarize
+    - compare
+    - classify
+    - rank
+    - draft
+    - identify_missing_evidence
+  cannot:
+    - override_rule_engine
+    - make_airworthiness_decision
+    - impose_operational_action
+    - close_regulatory_finding

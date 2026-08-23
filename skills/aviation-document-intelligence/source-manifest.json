@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": 1,
+  "manifest": "See source-manifest.yaml for the complete curated source registry.",
+  "policy": {
+    "binaryCommitDefault": false,
+    "officialFirstPartyOnly": true,
+    "recordChecksum": true,
+    "recordVersion": true,
+    "recordRetrievedAt": true
+  }
+}

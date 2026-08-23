@@ -1,0 +1,352 @@
+version: 1
+purpose: "Public-source corpus for aviation document intelligence testing"
+notes:
+  - "URLs are first-party authority sources discovered during the 2026-08-23 corpus scan."
+  - "The downloader records and fetches sources locally; it does not commit arbitrary third-party/copyrighted binaries into Git."
+  - "Currentness must be revalidated at ingestion time because authority pages can change."
+  - "Swiss FOCA/BAZL makes illustration copies of ICAO Annexes and selected PANS documents available from its official site. FOCA states these publications are illustrative and may not be complete/current, and that ICAO commercial subscriptions remain the authoritative publication channel."
+
+sources:
+  - id: easa-ear-air-ops-2026-03
+    authority: EASA
+    jurisdiction: EU/EEA
+    title: "Easy Access Rules for Air Operations"
+    version: "Revision 24, March 2026"
+    type: regulatory_consolidation
+    source_page: https://www.easa.europa.eu/en/document-library/easy-access-rules/easy-access-rules-air-operations
+    asset_types: [pdf, xml]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: easa-ear-tco-2026-07
+    authority: EASA
+    jurisdiction: EU/EEA
+    title: "Easy Access Rules for Third Country Operators"
+    version: "Revision from July 2026"
+    type: regulatory_consolidation
+    source_page: https://www.easa.europa.eu/en/document-library/easy-access-rules/easy-access-rules-third-country-operators
+    asset_types: [pdf, xml]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: easa-ear-continuing-airworthiness-2025-09
+    authority: EASA
+    jurisdiction: EU/EEA
+    title: "Easy Access Rules for Continuing Airworthiness"
+    version: "Revision from September 2025"
+    type: regulatory_consolidation
+    source_page: https://www.easa.europa.eu/en/document-library/easy-access-rules/easy-access-rules-continuing-airworthiness
+    asset_types: [pdf, xml]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: easa-ear-aerodromes-2026-03
+    authority: EASA
+    jurisdiction: EU/EEA
+    title: "Easy Access Rules for Aerodromes"
+    version: "Revision from March 2026"
+    type: regulatory_consolidation
+    source_page: https://www.easa.europa.eu/en/document-library/easy-access-rules/easy-access-rules-aerodromes
+    asset_types: [pdf, xml]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: easa-ear-aircrew-2025-11
+    authority: EASA
+    jurisdiction: EU/EEA
+    title: "Easy Access Rules for Aircrew"
+    version: "Revision from November 2025"
+    type: regulatory_consolidation
+    source_page: https://www.easa.europa.eu/en/document-library/easy-access-rules/easy-access-rules-aircrew
+    asset_types: [pdf, xml]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: easa-ear-initial-airworthiness-2025-11
+    authority: EASA
+    jurisdiction: EU/EEA
+    title: "Easy Access Rules for Initial Airworthiness and Environmental Protection"
+    version: "Revision from November 2025"
+    type: regulatory_consolidation
+    source_page: https://www.easa.europa.eu/en/document-library/easy-access-rules/easy-access-rules-initial-airworthiness-and-environmental-protection
+    asset_types: [pdf, xml]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: easa-ear-ground-handling-2025-11
+    authority: EASA
+    jurisdiction: EU/EEA
+    title: "Easy Access Rules for Ground Handling"
+    version: "November 2025"
+    type: regulatory_consolidation
+    source_page: https://www.easa.europa.eu/en/document-library/easy-access-rules/easy-access-rules-ground-handling
+    asset_types: [pdf, xml]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: easa-ear-information-security-2025-12
+    authority: EASA
+    jurisdiction: EU/EEA
+    title: "Easy Access Rules for Information Security"
+    version: "Revision from December 2025"
+    type: regulatory_consolidation
+    source_page: https://www.easa.europa.eu/en/document-library/easy-access-rules/easy-access-rules-information-security
+    asset_types: [pdf, xml]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: icao-swiss-foca-annexes-2026
+    authority: ICAO
+    publisher: "Swiss Federal Office of Civil Aviation (FOCA/BAZL)"
+    jurisdiction: Global
+    title: "ICAO Annexes 1-19 - Swiss FOCA illustration copies"
+    version: "Mixed editions/amendments as published by FOCA"
+    type: icao_annex_library
+    source_page: https://www.bazl.admin.ch/en/annexes-to-the-convention-on-international-civil-aviation-icao
+    asset_types: [pdf]
+    link_match: "^ICAO Annex (?:[1-9]|1[0-9])\\b"
+    download_all: true
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+    publisher_disclaimer: "FOCA states that the publication serves for illustration, assumes no liability for correctness or completeness, and points users to ICAO for commercial printouts/digital subscriptions."
+
+  - id: icao-swiss-foca-pans-2026
+    authority: ICAO
+    publisher: "Swiss Federal Office of Civil Aviation (FOCA/BAZL)"
+    jurisdiction: Global
+    title: "ICAO PANS collection - Swiss FOCA illustration copies"
+    version: "Mixed editions/amendments as published by FOCA"
+    type: icao_pans_library
+    source_page: https://www.bazl.admin.ch/en/annexes-to-the-convention-on-international-civil-aviation-icao
+    asset_types: [pdf]
+    link_match: "^ICAO (?:doc\\.?|Doc )(?:4444|8168|9868|9981|10066)\\b"
+    download_all: true
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+    publisher_disclaimer: "FOCA states that the publication serves for illustration, assumes no liability for correctness or completeness, and points users to ICAO for commercial printouts/digital subscriptions."
+
+  - id: icao-airworthiness-manual-swiss-foca
+    authority: ICAO
+    publisher: "Swiss Federal Office of Civil Aviation (FOCA/BAZL)"
+    jurisdiction: Global
+    title: "ICAO Doc 9760 Airworthiness Manual - Swiss FOCA illustration copy"
+    version: "Fourth Edition, 2020"
+    type: manual
+    source_page: https://www.bazl.admin.ch/en/annexes-to-the-convention-on-international-civil-aviation-icao
+    asset_types: [pdf]
+    link_match: "^ICAO Doc 9760\\b"
+    download_all: true
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+    publisher_disclaimer: "FOCA states that the publication serves for illustration, assumes no liability for correctness or completeness, and points users to ICAO for commercial printouts/digital subscriptions."
+
+  - id: icao-ais-manual-swiss-foca
+    authority: ICAO
+    publisher: "Swiss Federal Office of Civil Aviation (FOCA/BAZL)"
+    jurisdiction: Global
+    title: "ICAO Doc 8126 AIS Manual - Swiss FOCA illustration copy"
+    version: "Seventh Edition, Amendment 1"
+    type: manual
+    source_page: https://www.bazl.admin.ch/en/annexes-to-the-convention-on-international-civil-aviation-icao
+    asset_types: [pdf]
+    link_match: "^ICAO Doc 8126\\b"
+    download_all: true
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+    publisher_disclaimer: "FOCA states that the publication serves for illustration, assumes no liability for correctness or completeness, and points users to ICAO for commercial printouts/digital subscriptions."
+
+  - id: icao-safety-report-library
+    authority: ICAO
+    jurisdiction: Global
+    title: "ICAO Safety Report library"
+    type: safety_report_series
+    source_page: https://www.icao.int/safety-reports
+    asset_types: [pdf]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: icao-rasg-pa-annual-safety-reports
+    authority: ICAO
+    jurisdiction: Global
+    title: "RASG-PA Annual Safety Reports"
+    type: safety_report_series
+    source_page: https://www.icao.int/RASGPA/Annual%20Safety%20Report
+    asset_types: [pdf]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: faa-ac-43-13-1b
+    authority: FAA
+    jurisdiction: US
+    title: "AC 43.13-1B - Acceptable Methods, Techniques, and Practices - Aircraft Inspection and Repair"
+    version: "Change 1"
+    type: advisory_circular
+    source_page: https://www.faa.gov/regulations_policies/advisory_circulars/index.cfm/go/document.information/documentid/99861
+    asset_types: [pdf]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: faa-ac-120-92d
+    authority: FAA
+    jurisdiction: US
+    title: "AC 120-92D - Safety Management Systems for Aviation Service Providers"
+    version: "2024-05-21"
+    type: advisory_circular
+    source_page: https://www.faa.gov/regulations_policies/advisory_circulars/index.cfm/go/document.list
+    asset_types: [pdf]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: uk-caa-cap-747
+    authority: UK CAA
+    jurisdiction: UK
+    title: "CAP 747 - Mandatory Requirements for Airworthiness"
+    version: "Issue 5"
+    type: airworthiness_publication
+    source_page: https://www.caa.co.uk/data-and-publications/publications/documents/content/cap-747/
+    asset_types: [pdf]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: uk-caa-cap-562
+    authority: UK CAA
+    jurisdiction: UK
+    title: "CAP 562 - Civil Aircraft Airworthiness Information and Procedures"
+    type: airworthiness_publication
+    source_page: https://www.caa.co.uk/data-and-publications/publications/documents/content/cap-562/
+    asset_types: [pdf]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: kcaa-safety-management-2018
+    authority: KCAA
+    jurisdiction: Kenya
+    title: "Civil Aviation (Safety Management) Regulations, 2018"
+    version: "Legal Notice No. 91"
+    type: regulation
+    source_url: https://www.kcaa.or.ke/sites/default/files/regulation/Legal_Notice_No_91.pdf
+    asset_types: [pdf]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: kcaa-aoc-advisory-circular-2018
+    authority: KCAA
+    jurisdiction: Kenya
+    title: "CAA-AC-OPS001D - Certification of an Air Operator"
+    version: "June 2018"
+    type: advisory_circular
+    source_url: https://kcaa.or.ke/sites/default/files/regulation/FOPs%20Regulations/CAA-AC-OPS001D%20Cert%20of%20Air%20Operator.pdf
+    asset_types: [pdf]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: transport-canada-tc-aim
+    authority: Transport Canada
+    jurisdiction: Canada
+    title: "Transport Canada Aeronautical Information Manual (TC AIM) - TP 14371"
+    type: operational_reference
+    source_page: https://tc.canada.ca/en/aviation/publications/transport-canada-aeronautical-information-manual-tc-aim-tp-14371
+    asset_types: [pdf]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: nz-caa-part-91-2025-04
+    authority: NZ CAA
+    jurisdiction: New Zealand
+    title: "Part 91 - General Operating and Flight Rules"
+    version: "Consolidation 2025-04"
+    type: regulation
+    source_url: https://www.aviation.govt.nz/assets/rules/consolidations/Part_091_Consolidation.pdf
+    asset_types: [pdf]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: nz-caa-part-121-2025
+    authority: NZ CAA
+    jurisdiction: New Zealand
+    title: "Part 121 - Air Operations - Large Aeroplanes"
+    version: "Initial issue / 2025"
+    type: regulation
+    source_url: https://www.aviation.govt.nz/assets/rules/consolidations/Part_121_Consolidation.pdf
+    asset_types: [pdf]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: gcaa-car-for-issue-01
+    authority: UAE GCAA
+    jurisdiction: UAE
+    title: "CAR Part IV - Foreign Operators Regulation"
+    version: "Issue 01"
+    type: foreign_operator_regulation
+    source_url: https://www.gcaa.gov.ae/en/epublication/EPublications/Civil%20Aviation%20Regulations%20%28CARs%29/CAR%20IV%20-%20FLIGHT%20OPERATIONS%20REGULATIONS/AIRCRAFT%20OPERATIONS/CAR%20PART%20IV%20-%20FOREIGN%20OPERATORS%20REGULATION%20%28FOR%29%20-%20ISSUE%201.pdf
+    asset_types: [pdf]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: gcaa-safety-alert-2017-14
+    authority: UAE GCAA
+    jurisdiction: UAE
+    title: "Safety Alert 2017-14 - Mandatory National Regulations for Foreign Operators"
+    type: safety_alert
+    source_url: https://www.gcaa.gov.ae/en/epublication/EPublications/Safety%20Alerts/SAFETY%20ALERT%202017-14%20-%20MANDATORY%20NATIONAL%20REGULATIONS%20FOR%20FOREIGN%20OPERATORS%20OPERATING%20WITHIN%20EMIRATES%20FIR%20-%20ISSUE%2001.pdf
+    asset_types: [pdf]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: gcaa-information-bulletin-2018-10
+    authority: UAE GCAA
+    jurisdiction: UAE
+    title: "Information Bulletin 2018-10 - Guidance on Basing a Foreign Registered Aircraft for CAT in UAE"
+    type: information_bulletin
+    source_url: https://www.gcaa.gov.ae/en/epublication/EPublications/Safety%20Information%20Bulletin%20%28SIB%29/2018/INFORMATION%20BULLETIN%202018-10%20-%20GUIDANCE%20ON%20BASING%20A%20FOREIGN%20REGISTERED%20AIRCRAFT%20FOR%20COMMERCIAL%20AIR%20TRANSPORT%20%28CAT%29%20IN%20THE%20U.pdf
+    asset_types: [pdf]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: casa-ac-139-a-04
+    authority: CASA
+    jurisdiction: Australia
+    title: "AC 139.A-04 - Applying for Aerodrome Authorisations, Exemptions and Approvals"
+    type: advisory_circular
+    source_page: https://www.casa.gov.au/sites/default/files/2021-08/advisory-circular-139-a-04-applying-aerodrome-authorisations-exemptions-approvals.pdf
+    asset_types: [pdf]
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+
+  - id: dgca-india-car-library
+    authority: DGCA India
+    jurisdiction: India
+    title: "DGCA Civil Aviation Requirements public library"
+    type: regulatory_library
+    source_page: https://www.dgca.gov.in/digigov-portal/
+    asset_types: [pdf]
+    local_test: true
+    repo_binary: false
+    policy: source_reference

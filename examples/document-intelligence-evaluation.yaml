@@ -1,0 +1,97 @@
+version: 1
+purpose: "Seed evaluation cases for aviation document intelligence"
+
+cases:
+  - id: exact-safa-item
+    query: "What is SAFA inspection item A23?"
+    mode: exact
+    expected_sources:
+      - safa-ramp-intelligence
+    tests:
+      - exact_identifier_retrieval
+      - source_provenance
+
+  - id: safa-technical-defect
+    query: "What should an inspector do when a significant aircraft technical defect is found during turnaround?"
+    mode: hybrid
+    expected_authority: EASA
+    tests:
+      - semantic_retrieval
+      - paragraph_context
+      - citation_accuracy
+
+  - id: current-tco
+    query: "What are the current EASA requirements for third-country operators?"
+    mode: hybrid
+    expected_sources:
+      - easa-ear-tco-2026-07
+    tests:
+      - currentness
+      - jurisdiction
+      - version_resolution
+
+  - id: historical-v-current
+    query: "Compare the supplied 2012 SAFA guidance with the current EASA ramp-inspection framework and identify which source should govern a current implementation."
+    mode: temporal
+    expected_sources:
+      - easa-ear-tco-2026-07
+      - safa-ramp-intelligence
+    tests:
+      - historical_labeling
+      - source_precedence
+      - conflict_handling
+
+  - id: kcaa-aoc
+    query: "What does KCAA say about the AOC certification process?"
+    mode: jurisdictional
+    expected_authority: KCAA
+    tests:
+      - jurisdiction_filter
+      - exact_source_selection
+
+  - id: foreign-operator
+    query: "What requirements does the UAE GCAA apply to foreign operators?"
+    mode: jurisdictional
+    expected_authority: "UAE GCAA"
+    tests:
+      - authority_disambiguation
+      - foreign_operator_retrieval
+
+  - id: cross-authority-sms
+    query: "Compare the SMS approach in EASA, FAA and KCAA material."
+    mode: cross_document
+    expected_authorities:
+      - EASA
+      - FAA
+      - KCAA
+    tests:
+      - multi-source retrieval
+      - jurisdiction labeling
+      - citation separation
+
+  - id: exact-technical-reference
+    query: "Find the applicable technical reference for an aircraft inspection and repair question where manufacturer instructions are unavailable."
+    mode: technical
+    expected_sources:
+      - faa-ac-43-13-1b
+    tests:
+      - exact-title retrieval
+      - technical-applicability
+      - caveat preservation
+
+  - id: temporal-query
+    query: "What did the New Zealand Part 121 consolidation say in 2025?"
+    mode: temporal
+    expected_sources:
+      - nz-caa-part-121-2025
+    tests:
+      - date-filtering
+      - source-version
+
+  - id: abstain-unknown
+    query: "What will EASA require in 2035 for a regulation that does not yet exist?"
+    mode: hybrid
+    expected_result: OUT_OF_SCOPE
+    tests:
+      - abstention
+      - no-speculation

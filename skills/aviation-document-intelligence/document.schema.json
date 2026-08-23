@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aviation-intelligence.dev/schemas/aviation-document.schema.json",
+  "title": "Aviation Knowledge Document",
+  "type": "object",
+  "required": ["documentId", "title", "authority", "status", "sourceUrl"],
+  "properties": {
+    "documentId": {"type": "string"},
+    "title": {"type": "string"},
+    "authority": {"type": "string"},
+    "jurisdiction": {"type": ["string", "null"]},
+    "documentType": {"type": ["string", "null"]},
+    "version": {"type": ["string", "null"]},
+    "issue": {"type": ["string", "null"]},
+    "amendment": {"type": ["string", "null"]},
+    "publicationDate": {"type": ["string", "null"], "format": "date"},
+    "effectiveFrom": {"type": ["string", "null"], "format": "date"},
+    "effectiveTo": {"type": ["string", "null"], "format": "date"},
+    "status": {"type": "string", "enum": ["CURRENT", "HISTORICAL", "DRAFT", "SUPERSEDED", "WITHDRAWN", "UNKNOWN"]},
+    "sourceUrl": {"type": "string", "format": "uri"},
+    "downloadUrl": {"type": ["string", "null"], "format": "uri"},
+    "licensePolicy": {"type": ["string", "null"]},
+    "sha256": {"type": ["string", "null"]},
+    "mimeType": {"type": ["string", "null"]},
+    "byteSize": {"type": ["integer", "null"]},
+    "entities": {"type": "array", "items": {"type": "object"}},
+    "sections": {"type": "array", "items": {"type": "object"}},
+    "references": {"type": "array", "items": {"type": "object"}}
+  },
+  "additionalProperties": true
+}
