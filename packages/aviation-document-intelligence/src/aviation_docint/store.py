@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sqlite3
 from pathlib import Path
 from typing import Any, Iterable
@@ -51,6 +52,15 @@ CREATE INDEX IF NOT EXISTS idx_chunks_document ON chunks(document_id);
 """
 
 
+def safe_fts_query(query: str) -> str:
+    tokens = re.findall(r"[A-Za-z0-9][A-Za-z0-9_.:/-]*", query)
+    if not tokens:
+        return '""'
+    # Quote tokens so identifiers such as A17, Part-TCO, Annex 6 and TCO.GEN.100
+    # are treated as literals rather than FTS5 operators.
+    return " AND ".join(f'"{token.replace(chr(34), "")}"' for token in tokens[:32])
+
+
 class Store:
     def __init__(self, path: str | Path):
         self.path = str(path)
@@ -98,7 +108,7 @@ class Store:
     def lexical_search(self, query: str, limit: int = 50, filters: dict[str, Any] | None = None) -> list[SearchHit]:
         filters = filters or {}
         where = []
-        params: list[Any] = [query]
+        params: list[Any] = [safe_fts_query(query)]
         for key in ("authority", "jurisdiction", "status", "document_type"):
             if filters.get(key):
                 where.append(f"d.{key} = ?")
@@ -109,8 +119,8 @@ class Store:
         sql = f"""
         SELECT c.*, d.title, d.authority, d.jurisdiction, d.status, d.version, d.document_type, d.source_url,
                bm25(chunks_fts) AS rank
-        FROM chunks_fts f
-        JOIN chunks c ON c.chunk_id = f.chunk_id
+        FROM chunks_fts
+        JOIN chunks c ON c.chunk_id = chunks_fts.chunk_id
         JOIN documents d ON d.document_id = c.document_id
         WHERE chunks_fts MATCH ? {clause}
         ORDER BY rank
