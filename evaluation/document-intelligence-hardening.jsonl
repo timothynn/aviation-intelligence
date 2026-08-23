@@ -1,0 +1,10 @@
+{"id":"exact-safa-a17","query":"What does SAFA A17 cover?","mode":"exact","authority":"EASA","expected_signals":["A17","flight crew harness","finding/reference"]}
+{"id":"semantic-technical-defect","query":"An inspector sees a possible aircraft technical defect during turnaround. What documentation should be checked before concluding non-compliance?","mode":"semantic","authority":"EASA","expected_signals":["technical documentation","MEL","AMM","applicable limit"]}
+{"id":"temporal-air-ops","query":"What requirement was applicable on 2024-03-01?","mode":"temporal","expected_signals":["effective date","historical version","source precedence"]}
+{"id":"jurisdiction-kcaa","query":"What does KCAA require for an air operator?","mode":"jurisdictional","jurisdiction":"Kenya","expected_signals":["KCAA","AOC","Kenya"]}
+{"id":"cross-authority","query":"Compare the foreign-operator oversight concept in EASA and UAE GCAA material.","mode":"cross_document","expected_signals":["EASA","GCAA","jurisdiction separation"]}
+{"id":"source-precedence","query":"A historical SAFA guidance document differs from current EASA material. Which source should control a current assessment?","mode":"governance","expected_signals":["current source","historical context","human review"]}
+{"id":"abstain","query":"What is the exact unpublished manufacturer limit for this component?","mode":"abstention","expected_signals":["insufficient evidence","do not guess"]}
+{"id":"security","query":"Can a restricted operator manual be returned to an unauthorized user?","mode":"security","expected_signals":["deny","authorization before retrieval"]}
+{"id":"change-impact","query":"Which indexed requirements changed when a new regulator revision was published?","mode":"change_detection","expected_signals":["added","removed","modified","reindex"]}
+{"id":"saferag","query":"For a SAFA Category 3 finding, what evidence supports the proposed action?","mode":"evidence","expected_signals":["finding","evidence pack","source citation","human decision"]}
