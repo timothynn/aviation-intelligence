@@ -3,11 +3,12 @@
   "$id": "https://aviation-intelligence.dev/schemas/safa-workflow.json",
   "title": "SAFA Workflow Reference",
   "type": "object",
-  "required": ["inspection", "targeting", "followUp"],
+  "required": ["inspection", "targeting", "finding", "actions", "followUp", "aiGovernance"],
   "properties": {
     "inspection": {
       "type": "object",
       "properties": {
+        "checklistVersion": { "type": "string" },
         "checklistGroups": {
           "type": "array",
           "items": {
@@ -15,7 +16,13 @@
             "enum": ["A-Operations", "B-CabinSafety", "C-AircraftCondition", "D-Cargo", "E-General"]
           }
         },
-        "limitedInspectionAllowed": { "type": "boolean" }
+        "inspectionPhase": {
+          "type": "string",
+          "enum": ["Arrival", "Turnaround", "Departure", "FollowUp"]
+        },
+        "limitedInspectionAllowed": { "type": "boolean" },
+        "scopeSelectionRequired": { "type": "boolean" },
+        "captureInspectionWindow": { "type": "boolean" }
       }
     },
     "targeting": {
@@ -25,16 +32,90 @@
           "type": "array",
           "items": { "type": "string", "enum": ["LongTerm", "ShortTerm", "SpotCheck", "Focused", "FollowUp"] }
         },
-        "signals": { "type": "array", "items": { "type": "string" } }
+        "signals": { "type": "array", "items": { "type": "string" } },
+        "requiresPolicyApprovedScoring": { "type": "boolean" },
+        "requiresRecommendationEvidence": { "type": "boolean" }
+      }
+    },
+    "finding": {
+      "type": "object",
+      "properties": {
+        "resultTypes": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["Satisfactory", "Finding", "GeneralRemark", "NotApplicable"] }
+        },
+        "supportsPreDescribedFindings": { "type": "boolean" },
+        "supportsUserDescribedFindings": { "type": "boolean" },
+        "requiresApplicableStandard": { "type": "boolean" },
+        "requiresEvidenceProvenance": { "type": "boolean" },
+        "humanConfirmationRequired": { "type": "boolean" }
+      }
+    },
+    "actions": {
+      "type": "object",
+      "properties": {
+        "actionClasses": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["Class1", "Class2", "Class3"] }
+        },
+        "supportsOperationalRestriction": { "type": "boolean" },
+        "supportsCorrectiveActionBeforeFlight": { "type": "boolean" },
+        "supportsDetention": { "type": "boolean" },
+        "supportsOperatingBan": { "type": "boolean" },
+        "requiresAuthorisedHumanDecision": { "type": "boolean" }
+      }
+    },
+    "proofOfInspection": {
+      "type": "object",
+      "properties": {
+        "requiredForEveryInspection": { "type": "boolean" },
+        "recordsCheckedItems": { "type": "boolean" },
+        "recordsFindings": { "type": "boolean" },
+        "requiresReceiptAcknowledgement": { "type": "boolean" },
+        "signatureMeansAcceptance": { "type": "boolean", "const": false }
       }
     },
     "followUp": {
       "type": "object",
       "properties": {
         "requiresCorrectiveActionEvidence": { "type": "boolean" },
+        "supportsRootCauseAnalysis": { "type": "boolean" },
         "supportsVerification": { "type": "boolean" },
         "supportsReinspection": { "type": "boolean" },
+        "supportsRecurrenceTracking": { "type": "boolean" },
         "requiresHumanClosure": { "type": "boolean" }
+      }
+    },
+    "aiGovernance": {
+      "type": "object",
+      "properties": {
+        "enabledCapabilities": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "TargetBriefing",
+              "ChecklistPrioritisation",
+              "RegulatoryRetrieval",
+              "ApplicabilityAssist",
+              "FindingAssist",
+              "TechnicalReferenceAssist",
+              "EvidenceIndexing",
+              "FindingConsistencyCheck",
+              "ReportDrafting",
+              "CorrectiveActionReview",
+              "RecurrenceDetection",
+              "SafetyTrendAnalysis",
+              "ComputerVisionAnomalyDetection"
+            ]
+          }
+        },
+        "finalFindingDecisionHumanOnly": { "type": "boolean", "const": true },
+        "finalCategoryDecisionHumanOnly": { "type": "boolean", "const": true },
+        "operationalActionHumanOnly": { "type": "boolean", "const": true },
+        "findingClosureHumanOnly": { "type": "boolean", "const": true },
+        "requiresSourceProvenance": { "type": "boolean", "const": true },
+        "requiresAuditTrail": { "type": "boolean", "const": true }
       }
     }
   }
