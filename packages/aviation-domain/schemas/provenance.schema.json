@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aviation-intelligence.dev/schemas/provenance.schema.json",
+  "title": "Aviation Provenance",
+  "type": "object",
+  "required": ["sourceType", "capturedAt"],
+  "properties": {
+    "sourceType": {"type": "string"},
+    "sourceId": {"type": ["string", "null"]},
+    "sourceUri": {"type": ["string", "null"], "format": "uri"},
+    "publicationId": {"type": ["string", "null"]},
+    "sourceVersion": {"type": ["string", "null"]},
+    "retrievedAt": {"type": ["string", "null"], "format": "date-time"},
+    "capturedAt": {"type": "string", "format": "date-time"},
+    "effectiveFrom": {"type": ["string", "null"], "format": "date-time"},
+    "effectiveTo": {"type": ["string", "null"], "format": "date-time"},
+    "jurisdiction": {"type": ["string", "null"]},
+    "hash": {"type": ["string", "null"]},
+    "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1}
+  },
+  "additionalProperties": false
+}
