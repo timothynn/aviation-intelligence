@@ -8,6 +8,3 @@ dependencies = [
   "pyyaml>=6.0,<7",
   "requests>=2.32,<3",
 ]
-
-[project.scripts]
-avdoc-download = "scripts.download_corpus:main"
