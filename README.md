@@ -21,6 +21,30 @@ Build a practical engineering foundation for the next generation of aviation sof
 | 🔍 AI Assurance | Evaluation, groundedness, explainability, confidence and auditability |
 | 👨‍✈️ Human-in-the-loop | AI recommendations with explicit human review and approval |
 
+## Regulatory foundation
+
+Aviation Intelligence uses a layered regulatory model:
+
+```text
+ICAO SARPs / PANS
+       ↓
+Regional / national legal framework
+       ↓
+Regulations / rules
+       ↓
+AMC / GM / advisory material / policies
+       ↓
+Certificates / approvals / authorizations
+       ↓
+Inspections / audits / findings
+       ↓
+Corrective action / enforcement / safety intelligence
+```
+
+The repository intentionally models **jurisdiction, applicability, effective dates, source provenance and versioning** because aviation requirements differ across authorities and change over time.
+
+Research currently covers ICAO plus EASA/EU, FAA/US, KCAA/Kenya, Transport Canada, UK CAA and CASA Australia. See [`docs/regulatory-landscape.md`](docs/regulatory-landscape.md).
+
 ## Planned architecture
 
 ```text
@@ -65,23 +89,49 @@ aviation-intelligence/
 └── .github/           # CI, issue templates and project automation
 ```
 
-## Initial skills roadmap
+## Initial implementation priority
+
+### P0 — Foundation
 
 - [ ] Aviation domain model
-- [ ] Aviation document ingestion
-- [ ] Regulatory requirement extraction
-- [ ] Aviation RAG
-- [ ] Compliance gap analysis
-- [ ] Workflow intelligence
+- [ ] Regulatory ingestion abstraction
+- [ ] Aviation document intelligence
+- [ ] Evidence-backed aviation RAG
+
+### P1 — Aviation intelligence
+
+- [ ] Compliance assurance
+- [ ] Regulatory change intelligence
+- [ ] Air operations & approvals
 - [ ] Inspection intelligence
-- [ ] Safety/occurrence classification
-- [ ] Predictive maintenance
-- [ ] Aviation computer vision
-- [ ] Aviation speech/NLP
+- [ ] SAFA/ramp intelligence
+- [ ] Safety intelligence
+- [ ] Airworthiness & maintenance intelligence
+
+### P2 — Advanced intelligence
+
 - [ ] Aviation knowledge graph
 - [ ] Aviation AI agents
-- [ ] Human-in-the-loop decision support
-- [ ] AI evaluation and assurance
+- [ ] Predictive maintenance
+- [ ] Aeronautical information intelligence
+- [ ] Flight / weather / ATM intelligence
+- [ ] Computer vision and speech
+
+### P3 — Assurance & advanced research
+
+- [ ] AI evaluation benchmark suite
+- [ ] AI security and guardrails
+- [ ] Continuous model/knowledge monitoring
+- [ ] Advanced optimization and autonomy research
+
+## Research and design references
+
+- [`docs/regulatory-landscape.md`](docs/regulatory-landscape.md) — ICAO and authority framework
+- [`docs/standards-and-data-ecosystem.md`](docs/standards-and-data-ecosystem.md) — aviation data/interoperability concepts
+- [`docs/domain-model.md`](docs/domain-model.md) — common aviation entity model
+- [`docs/architecture/README.md`](docs/architecture/README.md) — platform architecture
+- [`skills/README.md`](skills/README.md) — complete skill catalogue
+- [`skills/ai-assurance/README.md`](skills/ai-assurance/README.md) — AI assurance model
 
 ## Engineering principles
 
@@ -91,6 +141,7 @@ aviation-intelligence/
 4. **Synthetic/public data should be preferred for examples; proprietary operational data does not belong here.**
 5. **Provider-neutral AI interfaces should be preferred where practical.**
 6. **Safety, security, privacy and auditability are design requirements, not afterthoughts.**
+7. **Rules and data are time-dependent; the repository must preserve version and applicability context.**
 
 ## Technology direction
 
@@ -110,6 +161,6 @@ This project is an engineering and research toolkit. It does **not** provide reg
 
 ## Status
 
-🚧 **Early foundation — architecture and first reusable skills are being established.**
+🚧 **Early foundation — regulatory architecture and reusable skills are now being established.**
 
-Contributions, domain expertise, technical discussion and improvements are welcome.
+Contributions, aviation domain expertise, technical discussion and improvements are welcome.
