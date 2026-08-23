@@ -1,7 +1,7 @@
 # Aviation Portal Platform
 
 ## Purpose
-Reusable portal patterns for applicants, operators, inspectors, reviewers, auditors and executives.
+Reusable portal patterns for applicants, operators, inspectors, auditors, reviewers and executives.
 
 ## Capabilities
 
@@ -9,8 +9,8 @@ Reusable portal patterns for applicants, operators, inspectors, reviewers, audit
 - delegated roles
 - guided applications
 - dynamic forms
-- document upload
-- payment
+- document upload and evidence exchange
+- fee assessment and payment
 - correspondence
 - task inbox
 - case status
@@ -22,7 +22,7 @@ Reusable portal patterns for applicants, operators, inspectors, reviewers, audit
 
 ## Architecture rule
 
-The portal is a presentation and interaction layer. Regulatory rules, workflow transitions, fees, approvals and authoritative records belong to backend services.
+The portal is a presentation and interaction layer. Regulatory rules, workflow transitions, fee rules, approvals and authoritative records belong to backend domain services.
 
 ## AI features
 
@@ -33,6 +33,8 @@ The portal is a presentation and interaction layer. Regulatory rules, workflow t
 - correspondence drafting
 - contextual help
 - accessibility assistance
+
+AI recommendations must not bypass authorization, workflow controls or audit requirements.
 
 ## Security
 
