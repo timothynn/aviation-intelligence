@@ -6,7 +6,7 @@ Aviation Intelligence is a developer-focused open-source project for engineers b
 
 ## Current status
 
-The project has moved beyond a research-only foundation. The repository contains a **working aviation document-intelligence reference engine**, a reproducible global aviation-source registry, SAFA RAMP intelligence, temporal/applicability contracts, a knowledge-graph contract, change detection, document access policy and a grounded LLM gateway contract.
+The project has moved beyond a research-only foundation. The repository contains a **working aviation document-intelligence reference engine**, a reproducible global aviation-source registry, SAFA RAMP intelligence, temporal/applicability contracts, a knowledge-graph contract, change detection, document access policy, a grounded LLM gateway contract, and a PostgreSQL production persistence adapter.
 
 The document-intelligence engine is intentionally **evidence-first and provider-neutral**: the LLM is not the search engine and is not the regulatory authority. Retrieval returns source-backed evidence with authority, jurisdiction, version, status, section, paragraph, page and provenance metadata.
 
@@ -25,7 +25,6 @@ The document-intelligence engine is intentionally **evidence-first and provider-
 - hybrid lexical/vector retrieval with reciprocal-rank fusion
 - authority, jurisdiction, status and document-type filters
 - aviation-aware reranking
-- evidence-pack generation
 - temporal resolution contracts
 - applicability scoring contracts
 - provider-neutral knowledge graph
@@ -35,6 +34,9 @@ The document-intelligence engine is intentionally **evidence-first and provider-
 - explicit abstention when evidence is insufficient
 - CLI for initialization, ingestion, vector indexing, search and statistics
 - FastAPI search/health reference service
+- PostgreSQL persistence adapter for production deployments
+- PostgreSQL knowledge-graph and source-change schema
+- local PostgreSQL/Redis development infrastructure
 - regression tests and GitHub Actions CI
 
 See [`packages/aviation-document-intelligence/README.md`](packages/aviation-document-intelligence/README.md), [`docs/aviation-document-intelligence.md`](docs/aviation-document-intelligence.md) and [`docs/aviation-document-intelligence-production-hardening.md`](docs/aviation-document-intelligence-production-hardening.md).
@@ -123,8 +125,8 @@ See [`skills/safa-ramp-intelligence/`](skills/safa-ramp-intelligence/) and [`doc
                                   │
                    Hybrid / Rerank / Temporal
                                   │
-                     Authority / Jurisdiction /
-                       Applicability / Security
+                 Authority / Jurisdiction /
+                   Applicability / Security
                                   │
                            Evidence Pack
                                   │
@@ -144,6 +146,9 @@ aviation-intelligence/
 ├── skills/
 │   ├── aviation-document-intelligence/
 │   └── safa-ramp-intelligence/
+├── infra/
+│   ├── docker-compose.document-intelligence.yml
+│   └── postgres/init/
 ├── datasets/
 ├── evaluation/
 ├── examples/
@@ -216,6 +221,20 @@ python skills/aviation-document-intelligence/scripts/download_corpus.py \
   --output data/corpus
 ```
 
+### PostgreSQL / Redis local infrastructure
+
+```bash
+docker compose -f infra/docker-compose.document-intelligence.yml up -d
+```
+
+Install the PostgreSQL adapter:
+
+```bash
+pip install -r packages/aviation-document-intelligence/requirements-postgres.txt
+```
+
+The local Compose stack is development infrastructure only. Production deployments should use managed credentials, secret storage, TLS, backups and appropriate network isolation.
+
 ## Priority roadmap
 
 ### P0 — Core regulated-system foundation
@@ -249,15 +268,18 @@ python skills/aviation-document-intelligence/scripts/download_corpus.py \
 - [x] Reference change detection
 - [x] Reference security/access policy
 - [x] Grounded LLM gateway contract
+- [x] PostgreSQL production persistence adapter
+- [x] PostgreSQL graph/source-monitoring schema
+- [x] Local PostgreSQL/Redis development stack
 - [ ] Production object storage and large-corpus lifecycle
 - [ ] Production PDF/XML/OCR/table extraction workers
 - [ ] Managed lexical + vector search backend
 - [ ] Production semantic reranker
-- [ ] Persistent knowledge graph
+- [ ] Persistent knowledge graph service
 - [ ] Production temporal/version resolution
 - [ ] Production regulatory applicability engine
 - [ ] Regulatory change-impact workflow
-- [ ] Source freshness and revision monitoring
+- [ ] Scheduled source freshness and revision monitoring
 - [ ] Inspector/compliance document workspace
 
 ### P3 — Aviation intelligence
@@ -333,4 +355,4 @@ This project is an engineering and research toolkit. It does not provide regulat
 
 ## Status
 
-🚧 **Active implementation.** The reference document-intelligence engine, global source registry, SAFA intelligence foundation and production-hardening contracts are in place. The next major work is persistent production infrastructure, expert evaluation, regulatory applicability/version reasoning at scale and the broader regulated-system core.
+🚧 **Active implementation.** The reference document-intelligence engine, global source registry, SAFA intelligence foundation, production-hardening contracts, PostgreSQL persistence path and local infrastructure are in place. Remaining work is primarily production-scale ingestion/search, persistent graph/temporal/applicability services, expert evaluation, governance/security and the broader regulated-system core.
