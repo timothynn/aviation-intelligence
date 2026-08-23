@@ -22,6 +22,10 @@ def main() -> None:
     ingest.add_argument("--input", required=True)
     ingest.add_argument("--db", default="data/docint.sqlite")
 
+    vector = sub.add_parser("index-vector")
+    vector.add_argument("--db", default="data/docint.sqlite")
+    vector.add_argument("--model", default="sentence-transformers/all-MiniLM-L6-v2")
+
     search = sub.add_parser("search")
     search.add_argument("query")
     search.add_argument("--db", default="data/docint.sqlite")
@@ -43,6 +47,11 @@ def main() -> None:
         elif args.command == "ingest":
             result = ingest_path(Path(args.input), store)
             print(json.dumps(result, indent=2))
+        elif args.command == "index-vector":
+            vector_root = Path(args.db).with_suffix("") / "vectors"
+            index = EmbeddingIndex(vector_root, model_name=args.model)
+            count = index.build(store.iter_chunk_texts())
+            print(json.dumps({"vectors": count, "model": args.model}, indent=2))
         elif args.command == "stats":
             print(json.dumps(store.stats(), indent=2))
         elif args.command == "search":
