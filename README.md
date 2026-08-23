@@ -6,7 +6,7 @@ Aviation Intelligence is a developer-focused open-source project for engineers b
 
 ## Current status
 
-The project has moved beyond a research-only foundation. The repository now contains a **working aviation document-intelligence reference engine**, a reproducible global aviation-source registry, SAFA RAMP intelligence, and the contracts needed to extend the platform into regulated aviation workflows.
+The project has moved beyond a research-only foundation. The repository contains a **working aviation document-intelligence reference engine**, a reproducible global aviation-source registry, SAFA RAMP intelligence, temporal/applicability contracts, a knowledge-graph contract, change detection, document access policy and a grounded LLM gateway contract.
 
 The document-intelligence engine is intentionally **evidence-first and provider-neutral**: the LLM is not the search engine and is not the regulatory authority. Retrieval returns source-backed evidence with authority, jurisdiction, version, status, section, paragraph, page and provenance metadata.
 
@@ -24,15 +24,20 @@ The document-intelligence engine is intentionally **evidence-first and provider-
 - optional local vector index using sentence-transformers
 - hybrid lexical/vector retrieval with reciprocal-rank fusion
 - authority, jurisdiction, status and document-type filters
-- lightweight identifier/entity-aware reranking
+- aviation-aware reranking
 - evidence-pack generation
-- grounded LLM prompt contract
+- temporal resolution contracts
+- applicability scoring contracts
+- provider-neutral knowledge graph
+- regulatory change fingerprinting
+- document-level access policy
+- grounded LLM prompt/provider contract
 - explicit abstention when evidence is insufficient
-- CLI for initialization, ingestion, indexing, search and statistics
+- CLI for initialization, ingestion, vector indexing, search and statistics
 - FastAPI search/health reference service
 - regression tests and GitHub Actions CI
 
-See [`packages/aviation-document-intelligence/README.md`](packages/aviation-document-intelligence/README.md) and [`docs/aviation-document-intelligence.md`](docs/aviation-document-intelligence.md).
+See [`packages/aviation-document-intelligence/README.md`](packages/aviation-document-intelligence/README.md), [`docs/aviation-document-intelligence.md`](docs/aviation-document-intelligence.md) and [`docs/aviation-document-intelligence-production-hardening.md`](docs/aviation-document-intelligence-production-hardening.md).
 
 ### Global aviation source registry ✅
 
@@ -79,28 +84,6 @@ The AI layer is constrained to decision support: preparation intelligence, check
 
 See [`skills/safa-ramp-intelligence/`](skills/safa-ramp-intelligence/) and [`docs/safa-ai-integration.md`](docs/safa-ai-integration.md).
 
-## 2026 research-driven direction
-
-The project is deliberately being designed around the way aviation oversight actually works: **risk-based, data-supported, continuously monitored, jurisdiction-aware, evidence-backed, version-aware and human-controlled**.
-
-The research set spans ICAO, EASA/EU, FAA, Transport Canada, UK CAA, CASA, KCAA, other national authorities, IATA material where appropriately licensed, safety/investigation bodies and ramp-inspection programmes.
-
-## Core pillars
-
-| Area | Focus | Status |
-| --- | --- | --- |
-| 🛩️ Aviation Domain | Aircraft, operators, organizations, aerodromes, personnel, approvals and certificates | Foundation |
-| ⚖️ Regulatory Intelligence | Rules, guidance, applicability, effective dates, changes and provenance | In progress |
-| 📄 Evidence | Documents, records, OCR, extraction, evidence chains and controlled references | **Engine implemented** |
-| 🔄 Workflow | Case management, stages, tasks, decisions, SLAs, escalation and audit history | Foundation / next major build |
-| 🔎 Inspection & Audit | Generic engine plus SAFA/SACA and authority surveillance adapters | SAFA capability in progress |
-| 🛡️ Compliance | Requirement-to-evidence mapping and controlled assessments | Next major build |
-| 💰 Cost | Fee schedules, effective dates, billing, payments and reconciliation | Planned |
-| 🧭 SSP / Safety | Hazards, risks, occurrences, SPIs, assurance and safety intelligence | Foundation |
-| 🧠 AI / ML | RAG, classification, anomaly detection, forecasting and domain models | Document intelligence implemented |
-| 🤖 Agents | Regulatory, compliance, inspection, safety and workflow assistants | Planned |
-| 🔐 AI Assurance | Groundedness, applicability, temporal correctness, security, human oversight and auditability | Partially implemented |
-
 ## Architecture
 
 ```text
@@ -118,13 +101,7 @@ The research set spans ICAO, EASA/EU, FAA, Transport Canada, UK CAA, CASA, KCAA,
                                   │
                        Workflow / Compliance
                                   │
-            ┌─────────────────────┼─────────────────────┐
-            │                     │                     │
-        Portal/API           Inspection/Audit        Cost/Finance
-            │                     │                     │
-            └─────────────────────┼─────────────────────┘
-                                  │
-                     Aviation Document Intelligence
+                    Aviation Document Intelligence
                                   │
        ┌──────────────────────────┼──────────────────────────┐
        │                          │                          │
@@ -144,10 +121,10 @@ The research set spans ICAO, EASA/EU, FAA, Transport Canada, UK CAA, CASA, KCAA,
              │                    │                    │
              └────────────────────┼────────────────────┘
                                   │
-                          Hybrid / Rerank
+                   Hybrid / Rerank / Temporal
                                   │
                      Authority / Jurisdiction /
-                       Version / Applicability
+                       Applicability / Security
                                   │
                            Evidence Pack
                                   │
@@ -160,19 +137,19 @@ The research set spans ICAO, EASA/EU, FAA, Transport Canada, UK CAA, CASA, KCAA,
 
 ```text
 aviation-intelligence/
-├── apps/                 # Reference applications
-├── services/             # API, workflow, inspection, AI and RAG services
-├── packages/             # Reusable domain and engineering packages
+├── apps/
+├── services/
+├── packages/
 │   └── aviation-document-intelligence/
-├── skills/               # Reusable aviation capabilities
+├── skills/
 │   ├── aviation-document-intelligence/
 │   └── safa-ramp-intelligence/
-├── datasets/             # Public/synthetic datasets and generators
-├── evaluation/           # Benchmarks and regression suites
-├── examples/             # Small runnable reference examples
-├── notebooks/            # Exploratory data/ML research
-├── docs/                 # Research, architecture and implementation guides
-└── .github/              # CI and project automation
+├── datasets/
+├── evaluation/
+├── examples/
+├── notebooks/
+├── docs/
+└── .github/
 ```
 
 ## Document-intelligence quick start
@@ -215,7 +192,7 @@ python -m aviation_docint.cli search \
   --db ../../data/docint.sqlite
 ```
 
-Build/use the optional local vector index and enable hybrid retrieval where the vector dependencies are installed:
+Build/use the optional local vector index and enable hybrid retrieval:
 
 ```bash
 python -m aviation_docint.cli index-vector --db ../../data/docint.sqlite
@@ -231,7 +208,7 @@ Run tests:
 pytest -q packages/aviation-document-intelligence/tests
 ```
 
-The global acquisition registry and downloader are separate from the engine so that large regulator corpora remain external to Git:
+Build the public/source-managed corpus separately:
 
 ```bash
 python skills/aviation-document-intelligence/scripts/download_corpus.py \
@@ -247,6 +224,7 @@ python skills/aviation-document-intelligence/scripts/download_corpus.py \
 - [x] Authority / jurisdiction / version metadata contracts
 - [x] Evidence/provenance contract
 - [x] Reproducible source acquisition registry
+- [x] Temporal/applicability/knowledge-graph reference contracts
 - [ ] Strongly typed common aviation domain model
 - [ ] Production regulatory ingestion/versioning service
 - [ ] Generic evidence and records service
@@ -267,14 +245,18 @@ python skills/aviation-document-intelligence/scripts/download_corpus.py \
 
 ### P2 — Production document intelligence
 
+- [x] Reference lexical/vector/hybrid retrieval
+- [x] Reference change detection
+- [x] Reference security/access policy
+- [x] Grounded LLM gateway contract
 - [ ] Production object storage and large-corpus lifecycle
 - [ ] Production PDF/XML/OCR/table extraction workers
 - [ ] Managed lexical + vector search backend
 - [ ] Production semantic reranker
-- [ ] Knowledge graph / regulatory relationship graph
-- [ ] Temporal/version resolution engine
-- [ ] Regulatory applicability engine
-- [ ] Regulatory change-impact engine
+- [ ] Persistent knowledge graph
+- [ ] Production temporal/version resolution
+- [ ] Production regulatory applicability engine
+- [ ] Regulatory change-impact workflow
 - [ ] Source freshness and revision monitoring
 - [ ] Inspector/compliance document workspace
 
@@ -313,20 +295,11 @@ python skills/aviation-document-intelligence/scripts/download_corpus.py \
 - [ ] Multi-authority adapter conformance tests
 - [ ] Disaster recovery and backup strategy
 
-## What remains in the document-intelligence engine
+## Evaluation
 
-The reference engine is intentionally local and lightweight. The major remaining production capabilities are:
+The current hardening benchmark is in [`evaluation/document-intelligence-hardening.jsonl`](evaluation/document-intelligence-hardening.jsonl). It covers exact SAFA identifiers, technical semantic retrieval, temporal questions, jurisdiction filtering, cross-authority comparison, source precedence, abstention, security and change detection.
 
-1. **Industrial ingestion** — robust OCR, table extraction, scanned-PDF handling, document deduplication and very large corpus parallelism.
-2. **Managed retrieval** — replace or complement SQLite/local vectors with a production search backend such as Azure AI Search, OpenSearch or equivalent.
-3. **Semantic reranking** — plug in a dedicated reranker and benchmark it against the current lightweight reranking layer.
-4. **Knowledge graph** — represent relationships between ICAO SARPs, PANS, EASA rules, national regulations, AMC/GM, findings, ADs, safety events and technical references.
-5. **Temporal reasoning** — determine which version was applicable on a requested date rather than only storing version metadata.
-6. **Applicability reasoning** — aircraft/operator/state/operation/jurisdiction-specific applicability rules.
-7. **Regulatory change monitoring** — detect new amendments, revisions and superseded material and trigger re-indexing/impact analysis.
-8. **Security and tenancy** — document-level authorization, private/licensed sources, encrypted storage, tenant isolation and permission-aware retrieval.
-9. **Evaluation at scale** — thousands of expert-authored queries with retrieval, citation, temporal, jurisdiction and abstention metrics.
-10. **LLM gateway** — provider abstraction, rate limits, caching, model routing, structured outputs and safety controls.
+Production evaluation should add expert-labeled gold evidence and score retrieval, citations, temporal correctness, applicability, abstention, latency and cost.
 
 ## Research references
 
@@ -334,14 +307,12 @@ The reference engine is intentionally local and lightweight. The major remaining
 - [`docs/authority-oversight-architecture.md`](docs/authority-oversight-architecture.md)
 - [`docs/inspection-and-audit-landscape.md`](docs/inspection-and-audit-landscape.md)
 - [`docs/inspection-schemes.md`](docs/inspection-schemes.md)
-- [`docs/portal-workflow-cost-architecture.md`](docs/portal-workflow-cost-architecture.md)
 - [`docs/ssp-safety-intelligence.md`](docs/ssp-safety-intelligence.md)
 - [`docs/aviation-document-intelligence.md`](docs/aviation-document-intelligence.md)
+- [`docs/aviation-document-intelligence-production-hardening.md`](docs/aviation-document-intelligence-production-hardening.md)
 - [`docs/aviation-document-intelligence-sources.md`](docs/aviation-document-intelligence-sources.md)
-- [`docs/document-corpus-sources.md`](docs/document-corpus-sources.md)
 - [`skills/aviation-document-intelligence/`](skills/aviation-document-intelligence/)
 - [`skills/safa-ramp-intelligence/`](skills/safa-ramp-intelligence/)
-- [`skills/README.md`](skills/README.md)
 
 ## Engineering principles
 
@@ -353,28 +324,8 @@ The reference engine is intentionally local and lightweight. The major remaining
 6. The portal is never the source of regulatory truth.
 7. Synthetic/public data is preferred for examples; proprietary operational data does not belong in the public repository.
 8. Security, privacy, retention and auditability are design requirements.
-9. Historical documents are valuable for testing but must never silently outrank current authoritative material.
-10. When reliable evidence is unavailable or conflicting, the system should abstain and escalate for human review.
-
-## Technology direction
-
-Reference implementation:
-
-- Python 3.11+ for document intelligence and ML tooling
-- SQLite FTS5 for local/reference lexical search
-- sentence-transformers for optional local embeddings
-- FastAPI for the reference search service
-
-Platform direction:
-
-- Backend: .NET / ASP.NET Core
-- Frontend: Angular / TypeScript
-- AI/ML: Python, scikit-learn, PyTorch, provider-neutral LLM interfaces
-- Production data: PostgreSQL, pgvector and/or managed search
-- Caching: Redis
-- Deployment: Docker, GitHub Actions
-
-These are reference choices, not mandatory implementation constraints.
+9. Historical documents must never silently outrank current authoritative material.
+10. When evidence is unavailable or conflicting, the system should abstain and escalate for human review.
 
 ## Disclaimer
 
@@ -382,4 +333,4 @@ This project is an engineering and research toolkit. It does not provide regulat
 
 ## Status
 
-🚧 **Active implementation.** The reusable document-intelligence engine, source registry and SAFA intelligence foundations are in the repository. The next major work is production-scale ingestion/retrieval, regulatory applicability/version reasoning, knowledge graph integration and the broader regulated-system core.
+🚧 **Active implementation.** The reference document-intelligence engine, global source registry, SAFA intelligence foundation and production-hardening contracts are in place. The next major work is persistent production infrastructure, expert evaluation, regulatory applicability/version reasoning at scale and the broader regulated-system core.
