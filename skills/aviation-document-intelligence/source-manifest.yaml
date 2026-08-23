@@ -4,6 +4,7 @@ notes:
   - "URLs are first-party authority sources discovered during the 2026-08-23 corpus scan."
   - "The downloader records and fetches sources locally; it does not commit arbitrary third-party/copyrighted binaries into Git."
   - "Currentness must be revalidated at ingestion time because authority pages can change."
+  - "Swiss FOCA/BAZL makes illustration copies of ICAO Annexes and selected PANS documents available from its official site. FOCA states these publications are illustrative and may not be complete/current, and that ICAO commercial subscriptions remain the authoritative publication channel."
 
 sources:
   - id: easa-ear-air-ops-2026-03
@@ -101,6 +102,70 @@ sources:
     local_test: true
     repo_binary: false
     policy: source_reference
+
+  - id: icao-swiss-foca-annexes-2026
+    authority: ICAO
+    publisher: "Swiss Federal Office of Civil Aviation (FOCA/BAZL)"
+    jurisdiction: Global
+    title: "ICAO Annexes 1-19 - Swiss FOCA illustration copies"
+    version: "Mixed editions/amendments as published by FOCA"
+    type: icao_annex_library
+    source_page: https://www.bazl.admin.ch/en/annexes-to-the-convention-on-international-civil-aviation-icao
+    asset_types: [pdf]
+    link_match: "^ICAO Annex (?:[1-9]|1[0-9])\\b"
+    download_all: true
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+    publisher_disclaimer: "FOCA states that the publication serves for illustration, assumes no liability for correctness or completeness, and points users to ICAO for commercial printouts/digital subscriptions."
+
+  - id: icao-swiss-foca-pans-2026
+    authority: ICAO
+    publisher: "Swiss Federal Office of Civil Aviation (FOCA/BAZL)"
+    jurisdiction: Global
+    title: "ICAO PANS collection - Swiss FOCA illustration copies"
+    version: "Mixed editions/amendments as published by FOCA"
+    type: icao_pans_library
+    source_page: https://www.bazl.admin.ch/en/annexes-to-the-convention-on-international-civil-aviation-icao
+    asset_types: [pdf]
+    link_match: "^ICAO (?:doc\\.?|Doc )(?:4444|8168|9868|9981|10066)\\b"
+    download_all: true
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+    publisher_disclaimer: "FOCA states that the publication serves for illustration, assumes no liability for correctness or completeness, and points users to ICAO for commercial printouts/digital subscriptions."
+
+  - id: icao-airworthiness-manual-swiss-foca
+    authority: ICAO
+    publisher: "Swiss Federal Office of Civil Aviation (FOCA/BAZL)"
+    jurisdiction: Global
+    title: "ICAO Doc 9760 Airworthiness Manual - Swiss FOCA illustration copy"
+    version: "Fourth Edition, 2020"
+    type: manual
+    source_page: https://www.bazl.admin.ch/en/annexes-to-the-convention-on-international-civil-aviation-icao
+    asset_types: [pdf]
+    link_match: "^ICAO Doc 9760\\b"
+    download_all: true
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+    publisher_disclaimer: "FOCA states that the publication serves for illustration, assumes no liability for correctness or completeness, and points users to ICAO for commercial printouts/digital subscriptions."
+
+  - id: icao-ais-manual-swiss-foca
+    authority: ICAO
+    publisher: "Swiss Federal Office of Civil Aviation (FOCA/BAZL)"
+    jurisdiction: Global
+    title: "ICAO Doc 8126 AIS Manual - Swiss FOCA illustration copy"
+    version: "Seventh Edition, Amendment 1"
+    type: manual
+    source_page: https://www.bazl.admin.ch/en/annexes-to-the-convention-on-international-civil-aviation-icao
+    asset_types: [pdf]
+    link_match: "^ICAO Doc 8126\\b"
+    download_all: true
+    local_test: true
+    repo_binary: false
+    policy: source_reference
+    publisher_disclaimer: "FOCA states that the publication serves for illustration, assumes no liability for correctness or completeness, and points users to ICAO for commercial printouts/digital subscriptions."
 
   - id: icao-safety-report-library
     authority: ICAO
