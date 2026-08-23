@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aviation-intelligence.dev/schemas/regulatory-change.json",
+  "title": "Regulatory Change Event",
+  "type": "object",
+  "required": ["id", "authorityId", "jurisdiction", "sourceVersion", "effectiveAt", "changes"],
+  "properties": {
+    "id": { "type": "string" },
+    "authorityId": { "type": "string" },
+    "jurisdiction": { "type": "string" },
+    "sourceVersion": { "type": "string" },
+    "publishedAt": { "type": "string", "format": "date-time" },
+    "effectiveAt": { "type": "string", "format": "date-time" },
+    "supersedes": { "type": ["string", "null"] },
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["changeType", "targetId"],
+        "properties": {
+          "changeType": { "type": "string", "enum": ["Added", "Modified", "Removed", "GuidanceChanged", "ApplicabilityChanged"] },
+          "targetId": { "type": "string" },
+          "summary": { "type": "string" },
+          "impactLevel": { "type": "string", "enum": ["Low", "Medium", "High", "Critical"] }
+        }
+      }
+    }
+  }
+}
