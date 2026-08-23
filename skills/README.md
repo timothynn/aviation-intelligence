@@ -1,97 +1,95 @@
-# Aviation AI Skills
+# Aviation Intelligence Skills
 
-Skills are the core reusable capabilities of Aviation Intelligence. Each skill should solve one focused aviation engineering problem and be independently understandable, testable and reusable.
+Skills are reusable aviation engineering capabilities. A mature skill must be domain-aware, independently understandable, testable and explicit about its assurance boundary.
 
 ## Skill contract
 
 Every mature skill should document:
 
-1. **Purpose** — the aviation problem being solved.
-2. **Domain references** — relevant ICAO Annexes, regulations, authority material or standards.
-3. **Inputs** — data, documents or events it accepts.
-4. **Outputs** — structured results and confidence/evidence where relevant.
-5. **Architecture** — components and dependencies.
-6. **Implementation** — production-oriented code, not only a notebook.
-7. **Evaluation** — aviation/domain-specific tests and AI metrics.
-8. **Assurance** — traceability, human review, limitations and failure modes.
+1. Purpose
+2. Aviation/domain scope
+3. Authority or standards references
+4. Inputs and required context
+5. Outputs and evidence
+6. Architecture and dependencies
+7. Deterministic rules versus probabilistic AI
+8. Evaluation strategy
+9. Security/privacy considerations
+10. Human-review and escalation points
+11. Known limitations
+12. Version/source policy
 
-## Catalogue
+## P0 — Regulated-system foundation
 
-### Enterprise foundation
+- `aviation-domain-model`
+- `aviation-data-engineering`
+- `organization-intelligence`
+- `aviation-entity-resolution`
+- `regulatory-intelligence`
+- `regulatory-ingestion`
+- `regulatory-change`
+- `aviation-document-intelligence`
+- `evidence-provenance`
+- `compliance-assurance`
+- `workflow-intelligence`
+- `inspection-intelligence`
+- `audit-intelligence`
+- `portal-platform`
+- `cost-intelligence`
+- `ssp-safety-intelligence`
 
-- `aviation-domain-model` — common aviation entities, identifiers and relationships.
-- `aviation-data-engineering` — schemas, validation, provenance and synthetic data.
-- `organization-intelligence` — aviation organization lifecycle, scope and entity resolution.
-- `aviation-document-intelligence` — PDF, DOCX, OCR, XML, layout and metadata extraction.
-- `aviation-entity-resolution` — aircraft, operators, airports, people, certificates and identifiers.
+## P1 — Aviation certification, oversight and inspections
 
-### Regulatory & compliance
+- `air-operations-approvals`
+- `aoc-certification`
+- `operational-approvals`
+- `authority-oversight-intelligence`
+- `safa-ramp-intelligence`
+- `saca-ramp-intelligence`
+- `usop-cma-style-oversight`
+- `airworthiness-certification`
+- `airworthiness-maintenance`
+- `airworthiness-directives`
+- `ato-amo-camo-certification`
+- `aerodrome-certification`
+- `personnel-licensing`
+- `dangerous-goods-compliance`
+- `aviation-security-compliance`
 
-- `regulatory-intelligence` — authority/rule/requirement knowledge layer.
-- `regulatory-change` — amendment detection, versioning and compliance impact.
-- `aviation-rag` — evidence-backed regulatory and operational retrieval.
-- `compliance-assurance` — requirement-to-evidence mapping and gap analysis.
-- `aviation-knowledge-graph` — graph of regulations, organizations, aircraft, approvals and findings.
+## P2 — Safety and operational intelligence
 
-### Certification & approvals
+- `safety-intelligence`
+- `occurrence-intelligence`
+- `risk-modeling`
+- `safety-performance`
+- `flight-data-intelligence`
+- `flight-risk-intelligence`
+- `airport-operations`
+- `aeronautical-information`
+- `weather-intelligence`
+- `atm-ans-intelligence`
+- `reliability-intelligence`
+- `predictive-maintenance`
 
-- `air-operations-approvals` — AOC and operational-approval lifecycle.
-- `airworthiness-certification` — aircraft/product certification intelligence.
-- `personnel-licensing` — licence, rating, training and competency workflows.
-- `ato-amo-camo-certification` — organization approval lifecycle.
-- `aerodrome-certification` — airport/heliport certification and surveillance.
+## P3 — Knowledge and AI
 
-### Portal, workflow & finance
-
-- `portal-platform` — applicant, operator, inspector and reviewer portals.
-- `workflow-intelligence` — case orchestration, bottlenecks, next actions and SLA analytics.
-- `cost-intelligence` — fee schedules, calculation, billing, reconciliation and cost analytics.
-
-### Inspections, audits & oversight
-
-- `inspection-intelligence` — generic inspection planning, findings and follow-up.
-- `safa-ramp-intelligence` — SAFA/SACA ramp inspection support.
-- `audit-intelligence` — authority, operator, supplier and industry audits.
-- `safety-intelligence` — hazards, occurrences, risk indicators and safety performance.
-- `occurrence-intelligence` — classification, correlation and investigation support.
-- `authority-oversight-intelligence` — regulator-side surveillance and safety oversight.
-
-### State Safety Programme
-
-- `ssp-safety-intelligence` — SSP governance, risk management, assurance, promotion and safety intelligence.
-
-### Airworthiness & maintenance
-
-- `airworthiness-maintenance` — maintenance, defects, components and continuing airworthiness.
-- `airworthiness-directives` — AD ingestion, applicability and compliance tracking.
-- `reliability-intelligence` — fleet/component reliability analysis.
-- `predictive-maintenance` — anomaly detection and remaining-useful-life research.
-
-### Flight / ATM / aeronautical information
-
-- `flight-data-intelligence` — schedules, trajectories and operational analytics.
-- `flight-risk-intelligence` — operational risk indicators and decision support.
-- `aeronautical-information` — AIP, NOTAM and AIM processing.
-- `weather-intelligence` — METAR, TAF, SIGMET and weather-data fusion.
-- `atm-ans-intelligence` — airspace, ATS, CNS, surveillance and ATM decision support.
-- `airport-operations` — runway, stand, turnaround and airport-event intelligence.
-
-### AI / ML capabilities
-
+- `aviation-rag`
+- `aviation-knowledge-graph`
 - `aviation-nlp`
 - `aviation-speech`
 - `aviation-computer-vision`
 - `anomaly-detection`
 - `forecasting`
 - `classification`
-- `risk-modeling`
 - `aviation-agents`
 
-### Assurance & governance
+## P4 — AI assurance and governance
 
 - `human-in-the-loop`
 - `ai-evaluation`
 - `ai-groundedness`
+- `ai-applicability`
+- `ai-temporal-validation`
 - `ai-explainability`
 - `ai-confidence`
 - `ai-audit-trail`
@@ -99,31 +97,47 @@ Every mature skill should document:
 - `ai-security`
 - `ai-model-monitoring`
 - `data-provenance`
+- `data-retention`
 
-## Initial implementation priority
+## Scheme adapter principle
+
+The generic platform owns:
 
 ```text
-P0  Aviation Domain Model
-P0  Regulatory Intelligence
-P0  Document Intelligence
-P0  Aviation RAG
-P0  Compliance Assurance
-P0  Inspection / Audit foundation
-P0  Portal / Workflow / Cost primitives
-P0  SSP / Safety Intelligence model
-P1  Air Operations & Approvals
-P1  SAFA / SACA Ramp Intelligence
-P1  Authority Oversight Intelligence
-P1  Airworthiness & Maintenance
-P1  Regulatory Change Intelligence
-P2  Aviation Knowledge Graph
-P2  Aviation Agents
-P2  Predictive Maintenance
-P2  Computer Vision
-P2  Weather / Flight Intelligence
-P3  Advanced autonomy and optimization research
+Case
+Workflow
+Evidence
+Finding
+CorrectiveAction
+Verification
+Audit
+Notification
+Authorization
 ```
 
-## Contribution rule
+A scheme adapter owns:
 
-A new skill should be narrow enough to explain in one README and broad enough to be reused by more than one aviation application. Avoid creating skills that are merely wrappers around a single vendor API.
+```text
+Criteria
+Checklist
+Targeting
+Categorisation
+Scheme-specific Actions
+Follow-up rules
+Reporting format
+```
+
+This is mandatory for SAFA/SACA, USOAP-style oversight, IOSA, ISAGO and national inspection frameworks.
+
+## Implementation priority
+
+```text
+P0  Domain + Regulatory + Evidence + Compliance + Workflow + Inspection
+P1  KCAA AOC + KCAA Surveillance + SAFA/SACA + Airworthiness
+P1  Portal + Cost + SSP/Safety
+P2  RAG + Change Impact + Knowledge Graph
+P3  Agents + Predictive ML + CV + Speech
+P4  Assurance + Security + Production Observability
+```
+
+Avoid vendor-specific wrappers as standalone skills. A skill should expose reusable domain contracts and adapters.
