@@ -17,10 +17,11 @@ Every mature skill should document:
 
 ## Catalogue
 
-### Foundation
+### Enterprise foundation
 
 - `aviation-domain-model` — common aviation entities, identifiers and relationships.
 - `aviation-data-engineering` — schemas, validation, provenance and synthetic data.
+- `organization-intelligence` — aviation organization lifecycle, scope and entity resolution.
 - `aviation-document-intelligence` — PDF, DOCX, OCR, XML, layout and metadata extraction.
 - `aviation-entity-resolution` — aircraft, operators, airports, people, certificates and identifiers.
 
@@ -40,14 +41,24 @@ Every mature skill should document:
 - `ato-amo-camo-certification` — organization approval lifecycle.
 - `aerodrome-certification` — airport/heliport certification and surveillance.
 
-### Operations & oversight
+### Portal, workflow & finance
 
-- `workflow-intelligence` — bottlenecks, next actions and workflow analytics.
-- `inspection-intelligence` — risk-based inspection preparation, findings and follow-up.
-- `safa-ramp-intelligence` — ramp inspection preparation, finding support and trend analysis.
+- `portal-platform` — applicant, operator, inspector and reviewer portals.
+- `workflow-intelligence` — case orchestration, bottlenecks, next actions and SLA analytics.
+- `cost-intelligence` — fee schedules, calculation, billing, reconciliation and cost analytics.
+
+### Inspections, audits & oversight
+
+- `inspection-intelligence` — generic inspection planning, findings and follow-up.
+- `safa-ramp-intelligence` — SAFA/SACA ramp inspection support.
+- `audit-intelligence` — authority, operator, supplier and industry audits.
 - `safety-intelligence` — hazards, occurrences, risk indicators and safety performance.
 - `occurrence-intelligence` — classification, correlation and investigation support.
-- `audit-intelligence` — audit planning, evidence, findings and corrective actions.
+- `authority-oversight-intelligence` — regulator-side surveillance and safety oversight.
+
+### State Safety Programme
+
+- `ssp-safety-intelligence` — SSP governance, risk management, assurance, promotion and safety intelligence.
 
 ### Airworthiness & maintenance
 
@@ -97,9 +108,12 @@ P0  Regulatory Intelligence
 P0  Document Intelligence
 P0  Aviation RAG
 P0  Compliance Assurance
+P0  Inspection / Audit foundation
+P0  Portal / Workflow / Cost primitives
+P0  SSP / Safety Intelligence model
 P1  Air Operations & Approvals
-P1  Inspection Intelligence
-P1  Safety Intelligence
+P1  SAFA / SACA Ramp Intelligence
+P1  Authority Oversight Intelligence
 P1  Airworthiness & Maintenance
 P1  Regulatory Change Intelligence
 P2  Aviation Knowledge Graph
