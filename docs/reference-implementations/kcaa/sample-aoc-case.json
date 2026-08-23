@@ -1,0 +1,14 @@
+{
+  "caseId": "CASE-KCAA-AOC-0001",
+  "authority": { "id": "KCAA", "jurisdiction": "KE" },
+  "organization": { "id": "ORG-KE-0001", "role": "AIR_OPERATOR" },
+  "approval": { "type": "AOC", "status": "FORMAL_APPLICATION_SCREENING" },
+  "workflow": {
+    "stage": "FORMAL_APPLICATION_SCREENING",
+    "allowedTransitions": ["RETURN_FOR_CORRECTIONS", "PROCEED", "REJECT"]
+  },
+  "fees": { "status": "PENDING" },
+  "documents": [],
+  "findings": [],
+  "auditTrail": []
+}
