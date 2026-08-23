@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Download an aviation document test corpus from official first-party sources.
 
-The script deliberately keeps binaries outside git by default. It reads the
-source manifest, downloads direct assets or resolves PDF/XML links from the
-publisher page, computes SHA-256 checksums, and writes a metadata JSONL file.
+The script deliberately keeps binaries outside git by default. It reads one or
+more YAML manifests, downloads direct assets or resolves PDF/XML links from
+publisher pages, computes SHA-256 checksums, and writes a metadata JSONL file.
 
-Index pages can define ``download_all: true`` and an optional
-``link_match`` regular expression so a single authority page can contribute
-multiple documents (for example ICAO Annexes 1-19 published by a CAA).
+Index pages can define ``download_all: true`` and an optional ``link_match``
+regular expression so a single authority page can contribute multiple
+Documents (for example ICAO Annexes 1-19 published by a CAA).
 
 Requirements:
     pip install requests beautifulsoup4 pyyaml
@@ -33,6 +33,10 @@ import yaml
 from bs4 import BeautifulSoup
 
 USER_AGENT = "aviation-intelligence-document-corpus/1.0 (+https://github.com/timothynn/aviation-intelligence)"
+DEFAULT_MANIFESTS = (
+    "skills/aviation-document-intelligence/source-manifest.yaml,"
+    "skills/aviation-document-intelligence/source-manifest-global.yaml"
+)
 
 
 @dataclass(frozen=True)
@@ -54,7 +58,11 @@ def safe_name(value: str) -> str:
     return value[:180] or "document"
 
 
-def discover_links(page_url: str, desired_types: list[str], link_match: str | None = None) -> list[tuple[str, str, str]]:
+def discover_links(
+    page_url: str,
+    desired_types: list[str],
+    link_match: str | None = None,
+) -> list[tuple[str, str, str]]:
     response = requests.get(page_url, headers={"User-Agent": USER_AGENT}, timeout=60)
     response.raise_for_status()
     soup = BeautifulSoup(response.text, "html.parser")
@@ -93,8 +101,7 @@ def resolve_assets(record: dict[str, Any]) -> list[tuple[str, str, str | None]]:
         if not discovered:
             raise RuntimeError(f"No downloadable links discovered from {record['source_page']}")
         if record.get("download_all"):
-            for item in discovered:
-                assets.append(item)
+            assets.extend(discovered)
         else:
             by_type: dict[str, tuple[str, str, str]] = {}
             for item in discovered:
@@ -135,6 +142,7 @@ def download_one(source: Source, output_dir: Path, timeout: int = 120) -> list[d
             {
                 "sourceId": source.id,
                 "authority": record["authority"],
+                "publisher": record.get("publisher"),
                 "jurisdiction": record.get("jurisdiction"),
                 "title": asset_title,
                 "parentTitle": record["title"],
@@ -155,24 +163,41 @@ def download_one(source: Source, output_dir: Path, timeout: int = 120) -> list[d
     return metadata
 
 
-def load_sources(path: Path) -> list[Source]:
-    data = yaml.safe_load(path.read_text(encoding="utf-8"))
-    return [Source(item["id"], item) for item in data.get("sources", [])]
+def load_sources(paths: list[Path]) -> list[Source]:
+    sources: list[Source] = []
+    seen_ids: set[str] = set()
+    for path in paths:
+        data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        for item in data.get("sources", []):
+            source = Source(item["id"], item)
+            if source.id in seen_ids:
+                continue
+            sources.append(source)
+            seen_ids.add(source.id)
+    return sources
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--manifest", default="skills/aviation-document-intelligence/source-manifest.yaml")
+    parser.add_argument(
+        "--manifest",
+        default=DEFAULT_MANIFESTS,
+        help="Comma-separated YAML manifest paths",
+    )
     parser.add_argument("--output", default="data/corpus")
     parser.add_argument("--only", action="append", default=[])
     parser.add_argument("--workers", type=int, default=4)
     args = parser.parse_args()
 
-    manifest = Path(args.manifest)
+    manifest_paths = [Path(p.strip()) for p in args.manifest.split(",") if p.strip()]
     output_dir = Path(args.output)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    sources = load_sources(manifest)
+    missing = [str(path) for path in manifest_paths if not path.exists()]
+    if missing:
+        parser.error(f"Manifest(s) not found: {', '.join(missing)}")
+
+    sources = load_sources(manifest_paths)
     if args.only:
         wanted = set(args.only)
         sources = [source for source in sources if source.id in wanted]
@@ -184,8 +209,9 @@ def main() -> int:
         for future in concurrent.futures.as_completed(future_map):
             source = future_map[future]
             try:
-                rows.extend(future.result())
-                print(f"OK  {source.id} ({len(future.result())} assets)")
+                result = future.result()
+                rows.extend(result)
+                print(f"OK  {source.id} ({len(result)} assets)")
             except Exception as exc:  # noqa: BLE001
                 failures.append({"sourceId": source.id, "error": str(exc)})
                 print(f"ERR {source.id}: {exc}", file=sys.stderr)
