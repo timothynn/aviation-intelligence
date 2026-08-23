@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aviation-intelligence.dev/schemas/workflow.schema.json",
+  "title": "Aviation Workflow Case",
+  "type": "object",
+  "required": ["id", "workflowDefinition", "version", "state"],
+  "properties": {
+    "id": {"type": "string"},
+    "workflowDefinition": {"type": "string"},
+    "version": {"type": "string"},
+    "state": {"type": "string"},
+    "organizationId": {"type": ["string", "null"]},
+    "jurisdiction": {"type": ["string", "null"]},
+    "tasks": {"type": "array", "items": {"type": "object"}},
+    "decisions": {"type": "array", "items": {"type": "object"}},
+    "auditEvents": {"type": "array", "items": {"type": "object"}}
+  },
+  "additionalProperties": true
+}
