@@ -1,232 +1,271 @@
 # Aviation Regulatory Landscape
 
-This document defines the regulatory model that Aviation Intelligence is designed to represent. It is intentionally an engineering abstraction, not legal advice.
+This document defines the engineering model Aviation Intelligence uses to represent aviation regulation. It is not legal advice and does not replace current authority publications.
 
-## 1. Global baseline: ICAO
-
-The Chicago Convention establishes the international framework for civil aviation. ICAO develops Standards and Recommended Practices (SARPs) in 19 Technical Annexes and Procedures for Air Navigation Services (PANS). ICAO states that its framework contains more than 12,000 SARPs across the 19 Annexes and five PANS families.
-
-Aviation Intelligence should therefore treat ICAO as the **global reference layer**, rather than as a substitute for national law.
-
-### ICAO Annex-to-skill map
-
-| Annex | Domain | Candidate software skills |
-| --- | --- | --- |
-| 1 Personnel Licensing | Licences, ratings, medical/competency | licence lifecycle, eligibility rules, training records |
-| 2 Rules of the Air | Operating rules | rule engines, route/airspace validation |
-| 3 Meteorological Service | MET information | weather ingestion, alerting, data quality |
-| 4 Aeronautical Charts | Charts | geospatial validation, chart data processing |
-| 5 Units of Measurement | Aviation units | unit normalization and conversion |
-| 6 Operation of Aircraft | Flight operations | AOC, Ops Specs, FDM, manuals, flight-time rules |
-| 7 Nationality & Registration Marks | Registration | aircraft identity and registry services |
-| 8 Airworthiness | Design/certification/continuing airworthiness | certificate management, AD/SB tracking, maintenance compliance |
-| 9 Facilitation | Passenger/cargo/immigration facilitation | document workflows, API/PNR data, border-process automation |
-| 10 Aeronautical Telecommunications | CNS and communications | surveillance, communication, interoperability/data standards |
-| 11 Air Traffic Services | ATS/ATM | flight data, airspace, surveillance, operational decision support |
-| 12 Search and Rescue | SAR | incident workflow, geospatial dispatch, resource coordination |
-| 13 Accident/Incident Investigation | Investigation | occurrence ingestion, evidence, causal analysis, investigation workflow |
-| 14 Aerodromes | Airport/heliport design and operations | aerodrome certification, inspections, obstacle/data management |
-| 15 Aeronautical Information Services | AIS/AIM | AIP data, NOTAM workflows, data validation, digital AIM |
-| 16 Environmental Protection | Noise, emissions, CORSIA | emissions analytics, reporting, compliance workflows |
-| 17 Aviation Security | Security | access/control workflows, risk analytics, security compliance |
-| 18 Dangerous Goods | Dangerous goods | classification, acceptance checks, shipment compliance |
-| 19 Safety Management | SSP/SMS/safety intelligence | hazard, occurrence, risk, KPI and assurance tooling |
-
-ICAO Annex 6 is especially important to operator-facing systems because it addresses flight operations, operating limitations, aircraft equipment, navigation/communication equipment, maintenance, crew, dispatch, manuals, records, cabin crew, security and flight/duty limitations. Annex 8 provides the international airworthiness baseline but explicitly recognizes that detailed national airworthiness codes remain necessary.
-
-## 2. The national/regional implementation pattern
-
-The core design pattern is:
+## 1. Regulatory hierarchy
 
 ```text
 Chicago Convention
-      ↓
+       ↓
 ICAO SARPs / PANS / guidance
-      ↓
-Regional or national legal framework
-      ↓
-Implementing regulations / rules
-      ↓
-Acceptable Means of Compliance / advisory material / guidance
-      ↓
-Approvals, certificates, authorizations and declarations
-      ↓
-Oversight: surveillance, audits, inspections, findings
-      ↓
-Corrective action / enforcement / safety intelligence
+       ↓
+Regional / national legal framework
+       ↓
+Regulations / rules / implementing measures
+       ↓
+AMC / GM / advisory circulars / policy / decisions
+       ↓
+Certificates / approvals / authorizations / declarations
+       ↓
+Surveillance / inspections / audits
+       ↓
+Findings / corrective actions / enforcement
+       ↓
+Safety information / safety intelligence
 ```
 
-This is the most important domain abstraction for the repository.
+The core software rule is that a requirement is never just a text string. It must carry **authority, jurisdiction, version, status, effective/applicability dates, provenance, applicability criteria and relationships**.
 
-## 3. EASA / European Union
+## 2. ICAO global baseline
 
-EASA operates within the EU legal framework. Regulation (EU) 2018/1139 (the Basic Regulation) establishes EASA and the common aviation-safety framework. Detailed delegated and implementing regulations cover areas including airworthiness, aircrew, air operations, ATM/ANS, aerodromes, ground handling and unmanned aircraft.
+ICAO remains the global reference layer. Its SARPs are organized through 19 Annexes, complemented by PANS and other guidance. Annex 19 and the modern safety-management framework now put greater emphasis on safety data, information and safety intelligence.
 
-EASA's **Easy Access Rules** are particularly useful as a machine-readable engineering target. Current EASA publications include XML as well as PDF and online versions. The Air Operations Easy Access Rules consolidate regulation, AMC, GM and related certification material across Part-ARO, Part-ORO, Part-CAT, Part-SPA, Part-NCC, Part-NCO, Part-SPO and Part-IAM.
+### Annex-to-skill map
 
-Recommended EASA skills:
+| Annex | Domain | Software capabilities |
+|---|---|---|
+| 1 | Personnel Licensing | licence/rating lifecycle, eligibility, training/competency |
+| 2 | Rules of the Air | rules engine, operational validation |
+| 3 | Meteorology | MET ingestion, normalization, alerts |
+| 4 | Charts | chart/data validation, geospatial services |
+| 5 | Units | aviation units and conversion |
+| 6 | Operations | AOC, Ops Specs, manuals, FDM, crew/time limits |
+| 7 | Registration | aircraft registry, ownership/registration lifecycle |
+| 8 | Airworthiness | certification, continuing airworthiness, AD compliance |
+| 9 | Facilitation | passenger/cargo facilitation workflows |
+| 10 | Telecom | CNS, communications, interoperability |
+| 11 | ATS | ATM/ATS operational intelligence |
+| 12 | SAR | incident workflow, resource coordination |
+| 13 | Accident/Incident Investigation | evidence, investigation, causal-analysis support |
+| 14 | Aerodromes | certification, inspections, facilities/data |
+| 15 | AIS | AIP, NOTAM, AIM and digital information |
+| 16 | Environment | emissions/noise/CORSIA analytics |
+| 17 | Security | security compliance and controlled evidence |
+| 18 | Dangerous Goods | classification, acceptance and compliance |
+| 19 | Safety Management | SSP/SMS, hazards, risk, SPIs and safety intelligence |
 
-- rule/AMC/GM relationship extraction
-- machine-readable regulation ingestion
-- AOC and Operations Specification modeling
-- specific approval management: PBN, RVSM, LVO, dangerous goods, etc.
-- Part-CAMO / Part-145 / continuing-airworthiness intelligence
-- occurrence reporting
-- information-security risk compliance
-- third-country operator intelligence
-- aerodrome compliance
-- UAS regulatory decision support
+For this repository, Annex 6, 8, 13, 14, 15, 18 and 19 are especially important because they connect directly to operational systems, evidence, inspections, airworthiness, information management and safety intelligence.
 
-## 4. FAA / United States
+## 3. ICAO USOAP CMA / State oversight
 
-The FAA expresses requirements primarily through Title 14 of the Code of Federal Regulations (14 CFR), supported by policy, advisory circulars, orders, notices and other guidance.
+USOAP CMA is a **continuous, risk-based monitoring model**, not simply a periodic audit. ICAO uses eight Critical Elements and standardized Protocol Questions to assess State safety-oversight capability. The eight broad audit areas are LEG, ORG, PEL, OPS, AIR, AIG, ANS and AGA. ICAO also introduced SSP-related integrated assessment work through SSPIA.
 
-Important software-relevant areas include:
+Engineering implications:
 
-- Part 21: type, production and airworthiness certification
-- Part 39: Airworthiness Directives
-- Part 121: scheduled air carrier operations
-- Part 135: commuter/on-demand operations
-- Part 141: pilot schools
-- Part 145: repair stations
-- Part 5: Safety Management Systems
-- UAS rules and certification pathways
+```text
+State profile
+ → applicable PQ set
+ → evidence
+ → assessment
+ → effective implementation / maturity
+ → findings
+ → corrective action
+ → continuous monitoring
+```
 
-The FAA pattern reinforces a key repository requirement: **rules, guidance, certificates, surveillance and corrective actions must be represented separately but linked**.
+The model therefore needs question/version management, evidence requests, State submissions, assessment history, findings and longitudinal analytics.
 
-## 5. Transport Canada Civil Aviation
+## 4. EASA / European Union
 
-The Canadian Aviation Regulations (CARs) use a structured Part system. Examples include Part I general provisions and SMS requirements, Part II aircraft identification and registration, Part III aerodromes/airports/maintenance organizations, Part V airworthiness, Part VI general operating/flight rules and Part VII commercial air services.
+EASA operates inside the EU legal framework established by Regulation (EU) 2018/1139. A major engineering opportunity is EASA's **eRules / Easy Access Rules** ecosystem.
 
-Recommended skills:
+Current 2026 evidence shows that Air Operations Revision 24 from March 2026 is published as PDF, enhanced online content and machine-readable XML. EASA explicitly states that the XML can be processed and synchronized with local applications and databases, and that eRules are regularly updated. citeturn647973search0turn647973search6
 
-- regulation Part/Subpart/section parsing
-- certificate and approval management
-- SMS data processing
-- AMO and operator compliance
-- aircraft registration linkage
-- airworthiness directive tracking
+The current EASA library also includes 2026 revisions for Air Operations, Aerodromes, Third Country Operators and other rule families, while future applicability dates are explicitly marked in the online rules. citeturn647973search2turn647973search3turn647973search8
 
-## 6. UK Civil Aviation Authority
+This leads to a concrete repository requirement:
 
-The UK CAA maintains a post-EU-exit UK aviation regulatory framework incorporating UK legislation, UK regulations and CAA decisions/guidance. The structure remains recognizably EASA-derived in several areas, but the source of legal authority and the current UK-specific applicability must always be modeled.
+```text
+Rule article
+ ├── source regulation / decision
+ ├── amendment provenance
+ ├── AMC / GM relationships
+ ├── applicability date
+ ├── jurisdiction
+ ├── version
+ └── machine-readable representation
+```
 
-Software implications:
+Priority EASA adapters:
+- Air Operations / AOC / Ops Specs
+- Specific Approvals
+- TCO
+- Aircrew
+- Initial / Continuing Airworthiness
+- Aerodromes
+- ATM/ANS
+- Ground Handling
+- Information Security
+- Occurrence Reporting
+- UAS / SORA
 
+## 5. FAA / United States
+
+The FAA's regulatory model is based primarily on 14 CFR plus policy, advisory circulars, orders and other guidance. For software architecture, the most important lesson is the FAA **Safety Assurance System (SAS)**: a standardized, risk-based and data-supported oversight system used for certification, surveillance and Continued Operational Safety, with software supporting inspector data capture and oversight decisions. citeturn647973search12
+
+The repository should therefore model:
+
+```text
+Certificate Holder
+ → Risk Profile
+ → Oversight Plan
+ → Certification / Surveillance / COS
+ → Protocol / Assessment
+ → Finding
+ → Corrective action
+ → Reassessment
+```
+
+This is a reference pattern for authority-side inspection software, not a proposal to reproduce FAA proprietary software.
+
+## 6. Transport Canada
+
+Transport Canada provides another strong risk-based oversight pattern. Its surveillance model can be represented around assessments/inspections, audits, enforcement, **Process Inspections** and **Targeted Inspections**, with risk used to select the level and focus of surveillance.
+
+Engineering implication: make inspection planning a separate service from checklist execution so that risk-based targeting can be reused across schemes.
+
+## 7. UK Civil Aviation Authority
+
+The UK CAA maintains UK-specific legislation, regulations, CAA decisions and guidance. The architecture must treat UK applicability as its own jurisdiction rather than assuming that EASA-derived structures have identical legal effect.
+
+Priority skills:
 - jurisdiction-aware rule resolution
-- UK-specific versioning and legal status
-- Part-21 / Part-145 / Part-CAMO-style structures
-- UK CAA decisions and AMC/GM linkage
-- occurrence reporting and SMS
-- regulatory-change monitoring
-
-## 7. Kenya Civil Aviation Authority
-
-KCAA is particularly important as an initial reference jurisdiction for this project. Its public regulatory framework includes regulations for AOC certification and administration, airworthiness, personnel licensing, AMOs, approved training organizations, safety management, aircraft registration, commercial air transport, aerodromes, ATS, AIS, communications, navigation, surveillance, dangerous goods and UAS.
-
-KCAA also publishes Advisory Circulars and technical publications. In 2025 KCAA announced a revised set of 29 Civil Aviation Regulations, with additional regulations pending publication, demonstrating why the repository needs **regulatory versioning and effective-date awareness** rather than a static rules database.
-
-Recommended KCAA skills:
-
-- AOC certification workflow
-- ASL / air service licensing workflow
-- aircraft registration and airworthiness linkage
-- AMO / ATO certification
-- personnel licensing
-- safety management and occurrence reporting
-- aerodrome certification
-- ANS/CNS/AIS compliance
-- UAS approvals
-- inspection/audit findings
-- regulatory migration/version comparison
+- legal-status/version tracking
+- Part-21/145/CAMO-style approval models
+- SMS and management-of-change oversight
+- regulatory change analysis
 
 ## 8. CASA Australia
 
-CASA uses the Civil Aviation Safety Regulations (CASR) framework alongside Civil Aviation Regulations (CAR), airworthiness directives and advisory material. CASA's airworthiness material illustrates another reusable pattern: ADs can have affected products, effective dates, review mechanisms and AMOCs.
+CASA's CASR/CAR ecosystem provides another useful adapter pattern for rule hierarchy, airworthiness directives, approvals and applicability. The reusable pattern is the same: rule → applicability → affected entity/product → compliance evidence → closure.
 
-This maps directly to reusable Aviation Intelligence skills for regulatory change detection, applicability resolution and compliance evidence.
+## 9. Kenya Civil Aviation Authority
 
-## 9. Cross-authority engineering abstraction
+KCAA is the first complete reference jurisdiction for Aviation Intelligence.
 
-Do not model every regulator as a separate application. Model authorities using a common schema:
+KCAA's 2025 regulatory transition is especially important: KCAA published **29 revised Civil Aviation Regulations** and requires stakeholders to review them, align operations/systems/procedures, revise relevant manuals/documentation and train personnel. KCAA states that existing certificates/licences/approvals generally continue subject to transitional requirements and that enhanced surveillance, inspections and audits will be used during implementation. KCAA also lists **nine additional revised regulations pending Gazette publication**. citeturn934489search0
+
+This means the KCAA adapter must support:
+
+```text
+Current Regulation
+     ↓
+Transition provision
+     ↓
+Existing approval
+     ↓
+Progressive compliance
+     ↓
+Manual / procedure amendment
+     ↓
+Inspection / audit
+     ↓
+Final alignment
+```
+
+KCAA Flight Operations and surveillance material also supports an extensible approval model because the Authority handles AOC renewal/recertification, surveillance, amendments and special approvals such as PBN, RVSM, LVO and EDTO. The inspection/surveillance advisory circular calls for an entry meeting and review of items including ASL, AOC/Ops Specs, ATO approvals, aircraft registration, leases, statistics, audited financial statements and insurance. citeturn535738search36
+
+Priority KCAA adapters:
+- Organization / registry
+- ASL / AOC
+- Ops Specs / specific approvals
+- Aircraft registration / airworthiness
+- AMO / ATO / CAMO-style approvals
+- Personnel licensing
+- Aerodrome certification
+- ANS/CNS/AIS
+- UAS
+- Safety management / SSP
+- Surveillance / inspection / enforcement
+- Fees and service payments
+
+## 10. Cross-authority abstraction
 
 ```text
 Authority
  ├── Jurisdiction
  ├── LegalFramework
- ├── Regulation
- │    ├── Part / Chapter / Subpart
- │    ├── Section / Paragraph
- │    ├── EffectiveDate
- │    ├── ApplicabilityDate
- │    └── Status
- ├── Guidance
- │    ├── AMC
- │    ├── GM
- │    ├── AdvisoryCircular
- │    └── Policy / Decision
+ ├── Instrument
+ │    ├── Regulation
+ │    ├── Rule
+ │    ├── Guidance
+ │    ├── Decision
+ │    └── AdvisoryCircular
+ ├── Version
+ │    ├── publishedAt
+ │    ├── effectiveFrom
+ │    ├── applicableFrom
+ │    ├── effectiveTo
+ │    └── supersedes
+ ├── Requirement
  ├── Approval
- │    ├── Certificate
- │    ├── Authorisation
- │    ├── Declaration
- │    └── SpecificApproval
  ├── Oversight
- │    ├── Audit
- │    ├── Inspection
- │    ├── Finding
- │    └── CorrectiveAction
  └── Enforcement
 ```
 
-## 10. Regulatory change intelligence
+## 11. Regulatory change intelligence
 
-This should become one of the project's flagship capabilities.
-
-The engine should detect:
-
-- new regulations
-- amendments
-- applicability-date changes
-- revoked/superseded rules
-- guidance changes
-- new AMC/GM
-- changed forms
-- affected approvals
-- affected system workflows
-
-Example output:
+The regulatory-change engine is a core platform capability:
 
 ```text
-Regulatory Change
-        ↓
-Identify affected rules
-        ↓
-Resolve affected approvals
-        ↓
-Find affected organizations/applications
-        ↓
-Estimate compliance impact
-        ↓
-Create review tasks
-        ↓
-Human validation
+Source monitor
+ → fingerprint
+ → structural diff
+ → semantic diff
+ → changed requirements
+ → applicability resolution
+ → affected approvals / workflows / organizations
+ → impact assessment
+ → review task
+ → human validation
 ```
 
-## 11. Important disclaimer
+Change types:
+- new
+- amended
+- corrected
+- superseded
+- withdrawn
+- reissued
+- future applicability
+- temporary transition
+- guidance-only
+- form/template change
 
-Regulatory content in this repository should be treated as a technical knowledge representation. It must never be presented as authoritative legal advice or as a substitute for the current source publication from the applicable authority.
+## 12. Source hierarchy
+
+For regulated use, the engine should prefer:
+
+1. Applicable law/regulation
+2. Competent-authority rule/decision
+3. Official AMC/GM/advisory material
+4. Official authority guidance
+5. Recognized international standard/guidance
+6. Industry programme material
+7. Secondary commentary
+
+The source hierarchy must be stored as metadata and should influence retrieval and confidence.
 
 ## Sources
 
-- ICAO SARPs: https://www.icao.int/safety-management/standards-and-recommended-practices-sarps
-- ICAO Annexes: https://store.icao.int/en/annexes
-- ICAO Airworthiness: https://www.icao.int/airworthiness-aircraft
-- EASA Basic Regulation: https://www.easa.europa.eu/en/faq/19107
-- EASA Easy Access Rules: https://www.easa.europa.eu/en/document-library/easy-access-rules
-- EASA Air Operations: https://www.easa.europa.eu/en/document-library/easy-access-rules/easy-access-rules-air-operations
-- FAA: https://www.faa.gov/
-- Transport Canada CARs: https://tc.canada.ca/en/aviation
+- ICAO Safety Intelligence: https://www.icao.int/safety-management/SMI/SI
+- ICAO USOAP FAQ: https://www.icao.int/usoap/frequently-asked-questions-about-usoap
+- EASA Easy Access Rules Air Operations: https://www.easa.europa.eu/en/document-library/easy-access-rules/easy-access-rules-air-operations
+- EASA Ramp Inspection Programmes: https://www.easa.europa.eu/en/domains/air-operations/ramp-inspection-programmes-safa-saca
+- FAA Safety Assurance System: https://www.faa.gov/about/initiatives/sas
+- KCAA Regulations 2025: https://www.kcaa.or.ke/published-regs-2025
+- KCAA Safety Performance Measurement: https://www.kcaa.or.ke/safety-security-oversight/aviation-safety/safety-performance-measurement
+- KCAA Air Operator Surveillance AC-ATD012A: https://mail.kcaa.or.ke/sites/default/files/circulars/AC%20-%20Surveillance%20and%20inspection%20of%20air%20operators.pdf
+- Transport Canada: https://tc.canada.ca/en/aviation
 - UK CAA: https://www.caa.co.uk/
-- KCAA Aviation Regulations: https://kcaa.or.ke/legislation-publications/aviation-regulations
-- KCAA 2025 Regulations Notice: https://www.kcaa.or.ke/published-regs-2025
 - CASA: https://www.casa.gov.au/
