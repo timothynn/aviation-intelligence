@@ -1,74 +1,228 @@
-# Aviation Domain Model Blueprint
+# Aviation Domain Model
 
-The repository should use a common aviation domain model so AI skills can compose instead of inventing incompatible schemas.
+The common domain model is the foundation of Aviation Intelligence. AI skills must compose around shared facts rather than invent incompatible schemas.
 
-## Core entities
+## 1. Identity and temporal envelope
+
+Every material domain record should support:
+
+```text
+id
+type
+status
+jurisdiction
+authority
+validFrom
+validTo
+createdAt
+updatedAt
+source
+provenance
+securityClassification
+```
+
+The system must distinguish:
+
+```text
+Observed fact
+Derived fact
+Prediction
+Recommendation
+Authoritative decision
+```
+
+## 2. Core entities
+
+### Governance / legal
 
 ```text
 Authority
 Jurisdiction
+LegalFramework
 LegalInstrument
 Regulation
 Requirement
 Guidance
+Standard
+SourcePublication
+RegulatoryChange
+```
+
+### Organization / people
+
+```text
 Organization
+OrganizationUnit
 Operator
+AOCHandler
+ServiceProvider
+AccountableManager
+KeyPersonnel
+Personnel
+Licence
+Rating
+TrainingRecord
+Competency
+Medical
+```
+
+### Aircraft / airspace / airport
+
+```text
 Aircraft
 AircraftType
 Engine
 Component
+Registration
+CertificateOfAirworthiness
+AircraftConfiguration
 Aerodrome
 Runway
+Taxiway
 AirportFacility
-Flight
-Route
 Airspace
-Personnel
-Licence
-Certificate
-Approval
-Application
-Manual
-Document
-Inspection
-Audit
-Finding
-CorrectiveAction
-Occurrence
-Hazard
-Risk
-SafetyIndicator
-MaintenanceEvent
-AD
-SB
-WeatherObservation
+Route
+Flight
 ```
 
-## Core relationships
+### Approval / certification
 
 ```text
-Authority ──issues──> Regulation / Guidance
-Regulation ──contains──> Requirement
-Requirement ──appliesTo──> Organization / Aircraft / Operation
-Organization ──holds──> Certificate / Approval
-Operator ──operates──> Aircraft
-Aircraft ──has──> Engine / Component
-Aircraft ──has──> Certificate / MaintenanceHistory / ADStatus
-Operator ──submits──> Application
-Application ──requires──> Evidence / ComplianceAssessment
-Authority ──conducts──> Inspection / Audit
-Inspection ──produces──> Finding
-Finding ──requires──> CorrectiveAction
-Occurrence ──mayIndicate──> Hazard / Risk
+Application
+ApplicationPhase
+Assessment
+Approval
+Authorization
+Certificate
+OperationsSpecification
+SpecificApproval
+Limitation
+Exemption
+Deviation
+Renewal
+Amendment
+Suspension
+Revocation
 ```
 
-## Jurisdiction-aware representation
+### Records / evidence
 
-A requirement must not simply be stored as text. At minimum:
+```text
+Document
+DocumentVersion
+Record
+Evidence
+EvidenceLink
+Signature
+RetentionPolicy
+Correspondence
+Attachment
+```
+
+### Workflow / finance
+
+```text
+Case
+WorkflowDefinition
+WorkflowVersion
+WorkflowInstance
+Stage
+Task
+Decision
+Transition
+SLA
+FeeSchedule
+FeeRule
+FeeAssessment
+Invoice
+Payment
+Refund
+Reconciliation
+```
+
+### Inspection / safety
+
+```text
+InspectionProgramme
+InspectionScheme
+InspectionPlan
+Inspection
+Checklist
+ChecklistVersion
+ChecklistItem
+Observation
+Finding
+FindingClassification
+ImmediateAction
+CorrectiveAction
+PreventiveAction
+CAP
+Verification
+Reinspection
+Audit
+AuditFinding
+Occurrence
+Hazard
+Threat
+Risk
+RiskControl
+SafetyIndicator
+SafetyTarget
+SafetyIssue
+SafetyReport
+```
+
+### Airworthiness / maintenance
+
+```text
+MaintenanceEvent
+Defect
+DeferredDefect
+WorkOrder
+ApprovedMaintenanceData
+AD
+SB
+MaintenanceProgramme
+ReliabilityEvent
+ComponentHistory
+```
+
+## 3. Key relationships
+
+```text
+Authority ──governs──> Jurisdiction
+Authority ──publishes──> LegalInstrument / Guidance
+LegalInstrument ──contains──> Regulation / Requirement
+RegulatoryChange ──changes──> Requirement
+Requirement ──appliesTo──> Organization / Operation / Aircraft / Personnel
+Organization ──holds──> Certificate / Approval
+Organization ──employs──> Personnel
+Operator ──operates──> Aircraft
+Aircraft ──registeredAs──> Registration
+Aircraft ──has──> CertificateOfAirworthiness
+Aircraft ──has──> Engine / Component
+Application ──submittedBy──> Organization
+Application ──requires──> Requirement / Evidence
+Application ──runsThrough──> WorkflowInstance
+WorkflowInstance ──creates──> Task / Decision
+Inspection ──targets──> Organization / Aircraft / Aerodrome / Personnel
+Inspection ──uses──> InspectionScheme / Checklist
+Inspection ──produces──> Observation / Finding
+Finding ──references──> Requirement / Standard
+Finding ──requires──> CorrectiveAction
+CorrectiveAction ──verifiedBy──> Verification
+Occurrence ──mayIndicate──> Hazard / Risk
+Risk ──controlledBy──> RiskControl
+SafetyIndicator ──measures──> SafetyObjective
+FeeAssessment ──produces──> Invoice
+Invoice ──settledBy──> Payment
+```
+
+## 4. Regulatory requirement object
 
 ```json
 {
-  "requirementId": "...",
+  "requirementId": "REQ-KE-KCAA-OPS-001",
   "authority": "KCAA",
   "jurisdiction": "KE",
   "framework": "civil-aviation-regulations",
@@ -76,60 +230,127 @@ A requirement must not simply be stored as text. At minimum:
   "reference": "...",
   "title": "...",
   "status": "in-force",
+  "publishedAt": "...",
   "effectiveFrom": "...",
   "effectiveTo": null,
   "applicability": {
-    "operation": ["commercial-air-transport"],
-    "organization": ["air-operator"]
+    "organizationTypes": ["air-operator"],
+    "operationTypes": ["commercial-air-transport"],
+    "aircraftTypes": [],
+    "geography": ["KE"]
   },
   "source": {
     "uri": "...",
-    "version": "..."
+    "publicationId": "...",
+    "version": "...",
+    "retrievedAt": "...",
+    "hash": "..."
   }
 }
 ```
 
-## Approval model
-
-An aviation approval should support:
+## 5. Approval lifecycle
 
 ```text
-Application
- ├── Applicant
- ├── Scope
- ├── Regulatory Basis
- ├── Evidence
- ├── Assessments
- ├── Findings
- ├── Limitations
- ├── Decision
- ├── Effective Period
- └── Audit Trail
+PreApplication
+ → Application
+ → Screening
+ → Fees
+ → DetailedAssessment
+ → Compliance
+ → Inspection
+ → Finding/CAP
+ → Decision
+ → Approval/Certificate
+ → Surveillance
+ → Amendment/Renewal
+ → Suspension/Revocation/Closure
 ```
 
-## Finding model
+Approval state is never inferred solely from workflow state. The authoritative approval record has its own lifecycle and effective period.
+
+## 6. Inspection / finding model
 
 ```text
+Inspection
+ ├── Programme / Scheme / Version
+ ├── Target
+ ├── Team / Qualifications
+ ├── Plan
+ ├── Checklist Version
+ ├── Observations
+ ├── Evidence
+ ├── Findings
+ ├── Actions
+ ├── Report
+ └── Audit Trail
+
 Finding
- ├── Source (inspection/audit/review)
- ├── Requirement
+ ├── Requirement / Standard
  ├── Observation
  ├── Evidence
- ├── Severity / classification
- ├── Root-cause information
- ├── Corrective action
- ├── Due date
+ ├── Classification
+ ├── Severity
+ ├── Immediate Action
+ ├── Corrective Action
+ ├── Preventive Action
+ ├── Due Date
  ├── Verification
- └── Closure decision
+ ├── Closure
+ └── Challenge / Appeal
 ```
 
-## Design objectives
+## 7. Safety model
+
+```text
+Occurrence / Finding / Report
+        ↓
+Event classification
+        ↓
+Hazard / Threat
+        ↓
+Risk assessment
+        ↓
+Risk control
+        ↓
+Residual risk
+        ↓
+SPI / SPT
+        ↓
+Safety assurance
+        ↓
+Safety decision
+```
+
+## 8. Evidence model
+
+Evidence should preserve:
+
+```text
+EvidenceId
+SourceType
+SourceRecord
+DocumentId / Page / Section
+ObservedValue
+ExtractionMethod
+Confidence
+CapturedBy
+CapturedAt
+Hash
+SecurityClassification
+Validity
+```
+
+## 9. Design objectives
 
 - stable identifiers
-- explicit jurisdiction
+- explicit authority/jurisdiction
 - temporal validity
-- source provenance
+- provenance
 - versioning
+- lifecycle semantics
 - auditability
-- extensibility for new authorities
-- clean separation between fact, prediction and decision
+- security classification
+- interoperability
+- separation of facts from AI-derived outputs
+- extensibility for new authorities and schemes
