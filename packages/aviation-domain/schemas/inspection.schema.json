@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aviation-intelligence.dev/schemas/inspection.schema.json",
+  "title": "Aviation Inspection",
+  "type": "object",
+  "required": ["id", "scheme", "status", "startedAt"],
+  "properties": {
+    "id": {"type": "string"},
+    "scheme": {"type": "string"},
+    "schemeVersion": {"type": ["string", "null"]},
+    "status": {"type": "string"},
+    "authority": {"type": ["string", "null"]},
+    "jurisdiction": {"type": ["string", "null"]},
+    "targetId": {"type": ["string", "null"]},
+    "checklistVersion": {"type": ["string", "null"]},
+    "startedAt": {"type": "string", "format": "date-time"},
+    "completedAt": {"type": ["string", "null"], "format": "date-time"},
+    "observations": {"type": "array", "items": {"type": "object"}},
+    "findings": {"type": "array", "items": {"type": "object"}},
+    "actions": {"type": "array", "items": {"type": "object"}},
+    "evidence": {"type": "array", "items": {"type": "object"}}
+  },
+  "additionalProperties": true
+}
