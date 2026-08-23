@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from dataclasses import asdict
 from pathlib import Path
 
 from .ingest import ingest_path
@@ -29,6 +30,7 @@ def main() -> None:
     search.add_argument("--jurisdiction")
     search.add_argument("--status")
     search.add_argument("--document-type")
+    search.add_argument("--vector", action="store_true")
 
     stats = sub.add_parser("stats")
     stats.add_argument("--db", default="data/docint.sqlite")
@@ -52,12 +54,13 @@ def main() -> None:
             }.items() if v}
             vector_root = Path(args.db).with_suffix("")
             retriever = Retriever(store, EmbeddingIndex(vector_root / "vectors"))
-            pack = retriever.search(args.query, args.limit, filters=filters, use_vector=False)
+            pack = retriever.search(args.query, args.limit, filters=filters, use_vector=args.vector)
             print(json.dumps({
                 "query": pack.query,
+                "retrievalMethod": pack.retrieval_method,
                 "abstain": pack.abstain,
                 "reason": pack.abstain_reason,
-                "results": [e.__dict__ for e in pack.evidences],
+                "results": [asdict(e) for e in pack.evidences],
             }, indent=2, ensure_ascii=False))
     finally:
         store.close()
