@@ -1,0 +1,33 @@
+name: Domain Validation
+
+on:
+  push:
+    paths:
+      - 'packages/**'
+      - 'skills/**'
+      - 'examples/**'
+      - 'docs/**'
+  pull_request:
+    paths:
+      - 'packages/**'
+      - 'skills/**'
+      - 'examples/**'
+      - 'docs/**'
+
+jobs:
+  validate-json:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JSON documents
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for path in Path('.').rglob('*.json'):
+              if '.git/' in str(path):
+                  continue
+              with path.open(encoding='utf-8') as f:
+                  json.load(f)
+              print(f'OK {path}')
+          PY
