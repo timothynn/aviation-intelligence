@@ -1,0 +1,115 @@
+{
+  "inspection": {
+    "inspectionId": "RI-2026-000123",
+    "programme": "SAFA",
+    "checklistVersion": "current-rim-version",
+    "operator": "ABC Air",
+    "aircraft": {
+      "registration": "5Y-ABC",
+      "type": "B737-800",
+      "configuration": "Passenger"
+    },
+    "phase": "Turnaround",
+    "scheduledDeparture": "2026-08-23T14:40:00+03:00",
+    "inspectionStart": "2026-08-23T14:10:00+03:00",
+    "availableMinutes": 30
+  },
+  "targeting": {
+    "mode": "Focused",
+    "reasons": [
+      "Recurring previous finding family A23/A24",
+      "Open corrective action on defect reporting"
+    ],
+    "aiRecommendation": {
+      "priorityAreas": [
+        "A23",
+        "A24",
+        "C04"
+      ],
+      "confidence": 0.91,
+      "evidence": [
+        "RI-2026-000071",
+        "RI-2026-000094",
+        "CAP-2026-000031"
+      ],
+      "humanDecisionRequired": true
+    }
+  },
+  "checklist": {
+    "selectedItems": [
+      "A23",
+      "A24",
+      "C04",
+      "A07",
+      "B03",
+      "B05"
+    ],
+    "selectionRationale": "Limited turnaround; prior recurring findings prioritised first.",
+    "unselectedItems": [
+      "version-specific-item-not-run"
+    ]
+  },
+  "observation": {
+    "inspectionItem": "A17",
+    "text": "Pilot seat harness webbing appears frayed.",
+    "evidence": [
+      {
+        "type": "photo",
+        "id": "EV-001"
+      },
+      {
+        "type": "document",
+        "id": "MEL-2026-07"
+      }
+    ]
+  },
+  "aiFindingAssist": {
+    "potentialFinding": "Predefined-finding-code-from-active-rim",
+    "potentialCategory": "Category 2",
+    "standardReferences": [
+      "authoritative-standard-reference"
+    ],
+    "missingEvidence": [
+      "Confirm applicable MEL relief"
+    ],
+    "explanation": "Observed condition appears inconsistent with the applicable crew-seat harness requirement; category remains subject to inspector assessment and current RIM categorisation guidance.",
+    "confidence": 0.88,
+    "humanDecisionRequired": true
+  },
+  "decision": {
+    "findingAcceptedByInspector": true,
+    "finalCategory": "Category 2",
+    "actionClass": "Class2",
+    "operationalAction": null,
+    "decisionUser": "inspector-001"
+  },
+  "poi": {
+    "issued": true,
+    "crewAcknowledgedReceipt": true,
+    "signatureMeansAcceptance": false
+  },
+  "followUp": {
+    "correctiveActionRequired": true,
+    "rootCauseRequired": true,
+    "evidenceRequired": true,
+    "humanClosureRequired": true
+  },
+  "aiGovernance": {
+    "allowed": [
+      "briefing",
+      "checklistPrioritisation",
+      "regulatoryRetrieval",
+      "findingSuggestion",
+      "reportDrafting",
+      "recurrenceDetection"
+    ],
+    "prohibited": [
+      "autonomousCategory3Action",
+      "aircraftGroundingDecision",
+      "airworthinessDecision",
+      "findingClosure"
+    ],
+    "sourceProvenanceRequired": true,
+    "auditTrailRequired": true
+  }
+}
