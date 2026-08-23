@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aviation-intelligence.dev/schemas/safa-workflow.json",
+  "title": "SAFA Workflow Reference",
+  "type": "object",
+  "required": ["inspection", "targeting", "followUp"],
+  "properties": {
+    "inspection": {
+      "type": "object",
+      "properties": {
+        "checklistGroups": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["A-Operations", "B-CabinSafety", "C-AircraftCondition", "D-Cargo", "E-General"]
+          }
+        },
+        "limitedInspectionAllowed": { "type": "boolean" }
+      }
+    },
+    "targeting": {
+      "type": "object",
+      "properties": {
+        "modes": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["LongTerm", "ShortTerm", "SpotCheck", "Focused", "FollowUp"] }
+        },
+        "signals": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "followUp": {
+      "type": "object",
+      "properties": {
+        "requiresCorrectiveActionEvidence": { "type": "boolean" },
+        "supportsVerification": { "type": "boolean" },
+        "supportsReinspection": { "type": "boolean" },
+        "requiresHumanClosure": { "type": "boolean" }
+      }
+    }
+  }
+}
