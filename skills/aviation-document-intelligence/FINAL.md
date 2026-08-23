@@ -1,0 +1,1 @@
+The implementation is ready for review. The corpus itself is generated outside git by design; official sources and reproducible acquisition logic are committed.
