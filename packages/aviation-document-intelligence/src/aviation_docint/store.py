@@ -56,8 +56,6 @@ def safe_fts_query(query: str) -> str:
     tokens = re.findall(r"[A-Za-z0-9][A-Za-z0-9_.:/-]*", query)
     if not tokens:
         return '""'
-    # Quote tokens so identifiers such as A17, Part-TCO, Annex 6 and TCO.GEN.100
-    # are treated as literals rather than FTS5 operators.
     return " AND ".join(f'"{token.replace(chr(34), "")}"' for token in tokens[:32])
 
 
@@ -140,12 +138,17 @@ class Store:
                                              "page_start": row["page_start"], "page_end": row["page_end"]}))
         return hits
 
+    def iter_chunk_texts(self) -> Iterable[tuple[str, str]]:
+        rows = self.db.execute("SELECT chunk_id, text FROM chunks ORDER BY chunk_id")
+        for row in rows:
+            yield row["chunk_id"], row["text"]
+
     def get_chunks(self, chunk_ids: list[str]) -> list[dict[str, Any]]:
         if not chunk_ids:
             return []
         placeholders = ",".join("?" for _ in chunk_ids)
         rows = self.db.execute(
-            f"SELECT c.*, d.title, d.authority, d.jurisdiction, d.status, d.version, d.source_url FROM chunks c JOIN documents d ON d.document_id=c.document_id WHERE c.chunk_id IN ({placeholders})",
+            f"SELECT c.*, d.title, d.authority, d.jurisdiction, d.status, d.version, d.document_type, d.source_url FROM chunks c JOIN documents d ON d.document_id=c.document_id WHERE c.chunk_id IN ({placeholders})",
             chunk_ids,
         ).fetchall()
         return [dict(r) for r in rows]
