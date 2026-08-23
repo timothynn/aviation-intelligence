@@ -1,0 +1,35 @@
+{
+  "id": "org-ke-example-001",
+  "entityType": "Operator",
+  "jurisdiction": {
+    "countryCode": "KE",
+    "authorityId": "KCAA"
+  },
+  "validity": {
+    "effectiveFrom": "2026-01-01T00:00:00Z",
+    "effectiveTo": null
+  },
+  "provenance": {
+    "sourceType": "Synthetic",
+    "sourceId": "example-generator",
+    "sourceVersion": "1.0",
+    "retrievedAt": "2026-08-23T00:00:00Z",
+    "locator": "examples/domain-record.json"
+  },
+  "attributes": {
+    "name": "Example Airways",
+    "icaoDesignator": "EXA",
+    "iataDesignator": "EX",
+    "organizationStatus": "Active"
+  },
+  "relationships": [
+    {
+      "type": "OVERSEEN_BY",
+      "targetId": "authority-ke-kcaa"
+    },
+    {
+      "type": "HOLDS",
+      "targetId": "aoc-ke-example-001"
+    }
+  ]
+}
