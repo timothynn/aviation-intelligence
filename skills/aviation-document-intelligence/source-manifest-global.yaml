@@ -1,0 +1,421 @@
+version: 1
+purpose: "Global first-party aviation source registry for document-intelligence acquisition"
+policy:
+  repository_binary: false
+  currentness: "revalidate at ingestion"
+  source_priority: "current authoritative source > current regulator guidance > national implementation > historical/reference"
+  note: "This registry covers source families and public acquisition points. Dynamic regulator libraries should be crawled at ingestion rather than frozen in Git."
+
+sources:
+  - id: icao-foca-annexes-1-19
+    authority: ICAO
+    publisher: Swiss FOCA/BAZL
+    jurisdiction: Global
+    type: icao_annex_library
+    title: "ICAO Annexes 1-19"
+    source_page: https://www.bazl.admin.ch/en/annexes-to-the-convention-on-international-civil-aviation-icao
+    asset_types: [pdf]
+    download_all: true
+    link_match: "ICAO Annex|Annex [0-9]"
+    local_test: true
+    policy: source_reference
+    publisher_disclaimer: "Swiss FOCA states the copies are for illustration and assumes no liability for correctness or completeness."
+
+  - id: icao-foca-pans
+    authority: ICAO
+    publisher: Swiss FOCA/BAZL
+    jurisdiction: Global
+    type: icao_pans_library
+    title: "ICAO Procedures for Air Navigation Services"
+    source_page: https://www.bazl.admin.ch/en/annexes-to-the-convention-on-international-civil-aviation-icao
+    asset_types: [pdf]
+    download_all: true
+    link_match: "Doc 4444|Doc 8168|Doc 9868|Doc 9981|Doc 10066"
+    local_test: true
+    policy: source_reference
+
+  - id: icao-foca-manuals
+    authority: ICAO
+    publisher: Swiss FOCA/BAZL
+    jurisdiction: Global
+    type: icao_manuals
+    title: "ICAO manuals published through Swiss FOCA illustration page"
+    source_page: https://www.bazl.admin.ch/en/annexes-to-the-convention-on-international-civil-aviation-icao
+    asset_types: [pdf]
+    download_all: true
+    link_match: "Doc 9760|Doc 8126|Manuals to ICAO Annex 14"
+    local_test: true
+    policy: source_reference
+
+  - id: icao-safety-reports
+    authority: ICAO
+    jurisdiction: Global
+    type: safety_reports
+    title: "ICAO Safety Reports"
+    source_page: https://www.icao.int/safety-reports
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: icao-rasg-reports
+    authority: ICAO
+    jurisdiction: Global
+    type: regional_safety_reports
+    title: "ICAO Regional Aviation Safety Group reports"
+    source_page: https://www.icao.int/RASGPA/Annual%20Safety%20Report
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: icao-sarps-pans-public
+    authority: ICAO
+    jurisdiction: Global
+    type: public_sarps_reference
+    title: "ICAO public SARPs and PANS reference material"
+    source_page: https://www.icao.int/capsca/icao-sarps-annexes-and-pans
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: icao-store-catalogue
+    authority: ICAO
+    jurisdiction: Global
+    type: commercial_catalogue
+    title: "ICAO publications catalogue"
+    source_page: https://store.icao.int/en/
+    asset_types: [pdf]
+    download_all: false
+    local_test: false
+    policy: metadata_only
+
+  - id: easa-easy-access-rules-all
+    authority: EASA
+    jurisdiction: EU/EEA
+    type: regulatory_library
+    title: "EASA Easy Access Rules - full library"
+    source_page: https://www.easa.europa.eu/en/document-library/easy-access-rules
+    asset_types: [pdf, xml]
+    download_all: true
+    link_match: "Easy Access Rules|XML"
+    local_test: true
+    policy: source_reference
+
+  - id: easa-regulations
+    authority: EASA
+    jurisdiction: EU/EEA
+    type: regulations
+    title: "EASA regulations and decisions"
+    source_page: https://www.easa.europa.eu/en/document-library/general-publications
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: easa-air-operations
+    authority: EASA
+    jurisdiction: EU/EEA
+    type: operations
+    title: "Air Operations rule family"
+    source_page: https://www.easa.europa.eu/en/domains/air-operations/easy-access-rules
+    asset_types: [pdf, xml]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: easa-airworthiness-products
+    authority: EASA
+    jurisdiction: EU/EEA
+    type: airworthiness_certification
+    title: "Aircraft and products Easy Access Rules"
+    source_page: https://www.easa.europa.eu/en/domains/aircraft-products/easy-access-rules
+    asset_types: [pdf, xml]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: easa-aerodromes
+    authority: EASA
+    jurisdiction: EU/EEA
+    type: aerodromes
+    title: "Aerodrome Easy Access Rules"
+    source_page: https://www.easa.europa.eu/en/domains/aerodromes/easy-access-rules
+    asset_types: [pdf, xml]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: easa-atm-ans
+    authority: EASA
+    jurisdiction: EU/EEA
+    type: atm_ans
+    title: "ATM/ANS Easy Access Rules"
+    source_page: https://www.easa.europa.eu/en/domains/air-traffic-management/atm-ans-easy-access-rules
+    asset_types: [pdf, xml]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: easa-ad-library
+    authority: EASA
+    jurisdiction: EU/EEA
+    type: airworthiness_directives
+    title: "EASA Airworthiness Directives"
+    source_page: https://ad.easa.europa.eu/
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: kcaa-regulations-library
+    authority: KCAA
+    jurisdiction: Kenya
+    type: regulatory_library
+    title: "KCAA aviation regulations"
+    source_page: https://kcaa.or.ke/legislation-publications/aviation-regulations
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: kcaa-publications
+    authority: KCAA
+    jurisdiction: Kenya
+    type: guidance_and_safety
+    title: "KCAA publications, advisory circulars and safety material"
+    source_page: https://kcaa.or.ke/legislation-publications
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: faa-advisory-circulars
+    authority: FAA
+    jurisdiction: US
+    type: advisory_circular_library
+    title: "FAA Advisory Circulars"
+    source_page: https://www.faa.gov/regulations_policies/advisory_circulars/
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: faa-airworthiness-directives
+    authority: FAA
+    jurisdiction: US
+    type: airworthiness_directives
+    title: "FAA Airworthiness Directives"
+    source_page: https://www.faa.gov/regulations_policies/airworthiness_directives
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: faa-handbooks-manuals
+    authority: FAA
+    jurisdiction: US
+    type: manuals_guidance
+    title: "FAA handbooks, manuals and orders"
+    source_page: https://www.faa.gov/regulations_policies/handbooks_manuals
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: faa-sms-reference-library
+    authority: FAA
+    jurisdiction: US
+    type: safety_management
+    title: "FAA Safety Management reference library"
+    source_page: https://www.faa.gov/about/initiatives/sms/reference_library/policy_and_requirements
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: uk-caa-cap-library
+    authority: UK CAA
+    jurisdiction: UK
+    type: publications_library
+    title: "UK CAA CAP publications"
+    source_page: https://www.caa.co.uk/data-and-publications/publications/publications/
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: tcca-reference-centre
+    authority: Transport Canada
+    jurisdiction: Canada
+    type: aviation_document_library
+    title: "Transport Canada Aviation Reference Centre"
+    source_page: https://tc.canada.ca/en/aviation/reference-centre
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: tcca-airworthiness-directives
+    authority: Transport Canada
+    jurisdiction: Canada
+    type: airworthiness_directives
+    title: "Transport Canada Airworthiness Directives"
+    source_page: https://tc.canada.ca/en/aviation/aircraft-airworthiness/airworthiness-directives
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: casa-publications
+    authority: CASA
+    jurisdiction: Australia
+    type: publications_library
+    title: "CASA aviation documentation"
+    source_page: https://www.casa.gov.au/resources-and-information/aviation-documentation
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: casa-airworthiness-directives
+    authority: CASA
+    jurisdiction: Australia
+    type: airworthiness_directives
+    title: "CASA Airworthiness Directives"
+    source_page: https://www.casa.gov.au/airworthiness-directives
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: nz-caa-rules
+    authority: NZ CAA
+    jurisdiction: New Zealand
+    type: regulatory_library
+    title: "New Zealand Civil Aviation Rules"
+    source_page: https://www.aviation.govt.nz/rules/
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: gcaa-cars
+    authority: UAE GCAA
+    jurisdiction: UAE
+    type: regulatory_library
+    title: "UAE GCAA Civil Aviation Regulations"
+    source_page: https://www.gcaa.gov.ae/en/epublication/Pages/ViewAllDocuments.aspx
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: gcaa-safety-publications
+    authority: UAE GCAA
+    jurisdiction: UAE
+    type: safety_publications
+    title: "UAE GCAA safety alerts and bulletins"
+    source_page: https://www.gcaa.gov.ae/en/epublication/Pages/ViewAllDocuments.aspx
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: dgca-cars
+    authority: DGCA India
+    jurisdiction: India
+    type: regulatory_library
+    title: "DGCA India Civil Aviation Requirements"
+    source_page: https://www.dgca.gov.in/digigov-portal/
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: ntsb-aviation-reports
+    authority: NTSB
+    jurisdiction: US
+    type: accident_investigation
+    title: "NTSB aviation accident reports"
+    source_page: https://www.ntsb.gov/investigations/AccidentReports/Pages/aviation.aspx
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: bea-investigation-reports
+    authority: BEA
+    jurisdiction: France
+    type: accident_investigation
+    title: "BEA aviation investigation reports"
+    source_page: https://bea.aero/en/investigation-reports/
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: aaib-reports
+    authority: UK AAIB
+    jurisdiction: UK
+    type: accident_investigation
+    title: "UK AAIB reports"
+    source_page: https://www.gov.uk/government/collections/aaib-reports
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: tsb-canada-aviation-reports
+    authority: TSB Canada
+    jurisdiction: Canada
+    type: accident_investigation
+    title: "TSB Canada aviation investigations"
+    source_page: https://www.tsb.gc.ca/eng/aviation/index.html
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: atsb-aviation-reports
+    authority: ATSB
+    jurisdiction: Australia
+    type: accident_investigation
+    title: "ATSB aviation investigations"
+    source_page: https://www.atsb.gov.au/publications/investigation_reports/aviation
+    asset_types: [pdf]
+    download_all: true
+    local_test: true
+    policy: source_reference
+
+  - id: manufacturer-technical-private
+    authority: OEM
+    jurisdiction: Global
+    type: manufacturer_technical
+    title: "Manufacturer technical publications - private/licensed"
+    source_page: null
+    asset_types: [pdf]
+    local_test: false
+    policy: private_or_licensed
+    examples: [AMM, SRM, CMM, IPC, FCOM, QRH, SB, SIL, MEL, CDL]
+
+  - id: iata-dgr-private
+    authority: IATA
+    jurisdiction: Global
+    type: dangerous_goods
+    title: "IATA Dangerous Goods Regulations - private/licensed"
+    source_page: https://www.iata.org/en/publications/dgr/
+    asset_types: [pdf]
+    local_test: false
+    policy: private_or_licensed
+
+  - id: operator-private-corpus
+    authority: Operator
+    jurisdiction: Global
+    type: organization_private
+    title: "Operator manuals, SMS and internal procedures"
+    source_page: null
+    asset_types: [pdf, docx, xlsx]
+    local_test: false
+    policy: private_or_licensed
