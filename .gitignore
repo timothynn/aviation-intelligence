@@ -1,0 +1,21 @@
+# Generated aviation document corpus
+/data/corpus/
+/data/parsed/
+/data/index/
+
+# Local vector/search artifacts
+/.cache/
+/.rag-cache/
+*.faiss
+*.index
+
+# Python cache
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Local secrets
+.env
+.env.*
+!.env.example
