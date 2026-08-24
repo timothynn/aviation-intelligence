@@ -18,13 +18,22 @@ jobs:
         working-directory: packages/aviation-document-intelligence
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Install
+          cache: pip
+          cache-dependency-path: packages/aviation-document-intelligence/pyproject.toml
+
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pytest
+          python -m pip install -r requirements.txt
+          python -m pip install pytest
+          python -m pip install -e .
+
+      - name: Verify package import
+        run: python -c "import aviation_docint; print(aviation_docint.__version__)"
+
       - name: Run tests
-        run: pytest -q
+        run: python -m pytest -q
