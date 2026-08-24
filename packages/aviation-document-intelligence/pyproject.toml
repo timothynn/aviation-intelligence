@@ -16,6 +16,7 @@ dependencies = [
   "PyYAML>=6,<7",
   "lxml>=5,<7",
   "python-multipart>=0.0.9,<1",
+  "requests>=2.32,<3",
 ]
 
 [project.scripts]
