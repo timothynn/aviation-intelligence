@@ -1,0 +1,46 @@
+name: Test Aviation Platform Services
+
+on:
+  pull_request:
+    paths:
+      - 'packages/platform-services/**'
+      - 'packages/aviation-domain/**'
+      - 'packages/regulatory-domain/**'
+      - 'packages/evidence-domain/**'
+      - '.github/workflows/test-platform-services.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: platform-services-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore packages/platform-services/tests/AviationIntelligence.PlatformServices.Tests.csproj
+
+      - name: Build
+        run: dotnet build packages/platform-services/tests/AviationIntelligence.PlatformServices.Tests.csproj --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test packages/platform-services/tests/AviationIntelligence.PlatformServices.Tests.csproj --configuration Release --no-build --logger "trx;LogFileName=platform-services.trx"
+
+      - name: Upload test result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: platform-services-test-result
+          path: packages/platform-services/tests/TestResults/platform-services.trx
+          if-no-files-found: ignore
