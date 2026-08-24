@@ -1,0 +1,7 @@
+downloads/
+extracted/
+manifests/generated/
+*.pdf
+*.PDF
+*.xml
+*.zip
