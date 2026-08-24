@@ -6,7 +6,7 @@ Aviation Intelligence is a developer-focused open-source project for engineers b
 
 ## Current status
 
-The project has moved beyond a research-only foundation. The repository contains a **working aviation document-intelligence reference engine**, a reproducible global aviation-source registry, SAFA RAMP intelligence, temporal/applicability contracts, a knowledge-graph contract, change detection, document access policy, a grounded LLM gateway contract, and a PostgreSQL production persistence adapter.
+The project has moved beyond a research-only foundation. The repository contains a **working aviation document-intelligence reference engine**, a reproducible global aviation-source registry, SAFA RAMP intelligence, temporal/applicability contracts, a knowledge-graph contract and PostgreSQL adapter, source-change monitoring, document access policy, a grounded LLM gateway contract, PostgreSQL persistence and local development infrastructure.
 
 The document-intelligence engine is intentionally **evidence-first and provider-neutral**: the LLM is not the search engine and is not the regulatory authority. Retrieval returns source-backed evidence with authority, jurisdiction, version, status, section, paragraph, page and provenance metadata.
 
@@ -28,14 +28,17 @@ The document-intelligence engine is intentionally **evidence-first and provider-
 - temporal resolution contracts
 - applicability scoring contracts
 - provider-neutral knowledge graph
+- PostgreSQL knowledge-graph persistence
 - regulatory change fingerprinting
+- deterministic first-party source monitoring
+- document object-storage abstraction
 - document-level access policy
 - grounded LLM prompt/provider contract
 - explicit abstention when evidence is insufficient
 - CLI for initialization, ingestion, vector indexing, search and statistics
 - FastAPI search/health reference service
-- PostgreSQL persistence adapter for production deployments
-- PostgreSQL knowledge-graph and source-change schema
+- PostgreSQL document persistence adapter
+- PostgreSQL graph/source-monitoring schema
 - local PostgreSQL/Redis development infrastructure
 - regression tests and GitHub Actions CI
 
@@ -112,6 +115,7 @@ See [`skills/safa-ramp-intelligence/`](skills/safa-ramp-intelligence/) and [`doc
  Official sources            PDF/XML/HTML             Metadata/entities
  Provenance                   OCR/tables               Versioning
  SHA-256                      Chunking                 Relationships
+ Source monitoring            Object storage            Graph persistence
        │                          │                          │
        └──────────────────────────┼──────────────────────────┘
                                   │
@@ -271,15 +275,17 @@ The local Compose stack is development infrastructure only. Production deploymen
 - [x] PostgreSQL production persistence adapter
 - [x] PostgreSQL graph/source-monitoring schema
 - [x] Local PostgreSQL/Redis development stack
+- [x] Object-storage abstraction
+- [x] Deterministic source-monitoring service
 - [ ] Production object storage and large-corpus lifecycle
 - [ ] Production PDF/XML/OCR/table extraction workers
 - [ ] Managed lexical + vector search backend
 - [ ] Production semantic reranker
-- [ ] Persistent knowledge graph service
+- [ ] Production knowledge graph service deployment
 - [ ] Production temporal/version resolution
 - [ ] Production regulatory applicability engine
 - [ ] Regulatory change-impact workflow
-- [ ] Scheduled source freshness and revision monitoring
+- [ ] Scheduled source freshness and revision monitoring deployment
 - [ ] Inspector/compliance document workspace
 
 ### P3 — Aviation intelligence
@@ -355,4 +361,4 @@ This project is an engineering and research toolkit. It does not provide regulat
 
 ## Status
 
-🚧 **Active implementation.** The reference document-intelligence engine, global source registry, SAFA intelligence foundation, production-hardening contracts, PostgreSQL persistence path and local infrastructure are in place. Remaining work is primarily production-scale ingestion/search, persistent graph/temporal/applicability services, expert evaluation, governance/security and the broader regulated-system core.
+🚧 **Active implementation.** The reference document-intelligence engine, global source registry, SAFA intelligence foundation, production-hardening contracts, PostgreSQL persistence, graph persistence, object-storage abstraction, source monitoring and local infrastructure are in place. Remaining work is primarily managed production search/storage, distributed document processing, domain-specific regulatory execution, expert evaluation and the broader regulated-system core.
