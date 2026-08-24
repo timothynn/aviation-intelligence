@@ -6,7 +6,7 @@ Aviation Intelligence is a developer-focused open-source project for engineers b
 
 ## Current status
 
-The project has moved beyond a research-only foundation. The repository contains a **working aviation document-intelligence reference engine**, a reproducible global aviation-source registry, SAFA RAMP intelligence, temporal/applicability contracts, a knowledge-graph contract and PostgreSQL adapter, source-change monitoring, document access policy, a grounded LLM gateway contract, PostgreSQL persistence and local development infrastructure.
+The project has moved beyond a research-only foundation. The repository now contains a **working aviation document-intelligence reference engine**, a reproducible global aviation-source registry, SAFA RAMP intelligence, temporal/applicability contracts, knowledge-graph persistence, source-change monitoring, object-storage abstraction, a grounded LLM contract, PostgreSQL persistence, and a shared aviation platform core spanning domain, regulatory, workflow, inspection, evidence and compliance packages.
 
 The document-intelligence engine is intentionally **evidence-first and provider-neutral**: the LLM is not the search engine and is not the regulatory authority. Retrieval returns source-backed evidence with authority, jurisdiction, version, status, section, paragraph, page and provenance metadata.
 
@@ -35,14 +35,15 @@ The document-intelligence engine is intentionally **evidence-first and provider-
 - document-level access policy
 - grounded LLM prompt/provider contract
 - explicit abstention when evidence is insufficient
+- deterministic ingestion orchestration pipeline
 - CLI for initialization, ingestion, vector indexing, search and statistics
 - FastAPI search/health reference service
 - PostgreSQL document persistence adapter
 - PostgreSQL graph/source-monitoring schema
 - local PostgreSQL/Redis development infrastructure
-- regression tests and GitHub Actions CI
+- Python dependency/import/compile/test validation in CI
 
-See [`packages/aviation-document-intelligence/README.md`](packages/aviation-document-intelligence/README.md), [`docs/aviation-document-intelligence.md`](docs/aviation-document-intelligence.md) and [`docs/aviation-document-intelligence-production-hardening.md`](docs/aviation-document-intelligence-production-hardening.md).
+See [`packages/aviation-document-intelligence/README.md`](packages/aviation-document-intelligence/README.md), [`docs/aviation-document-intelligence.md`](docs/aviation-document-intelligence.md), [`docs/aviation-document-intelligence-production-hardening.md`](docs/aviation-document-intelligence-production-hardening.md) and [`docs/platform-core-services.md`](docs/platform-core-services.md).
 
 ### Global aviation source registry ✅
 
@@ -62,6 +63,33 @@ The repository includes a global first-party acquisition registry covering sourc
 - **Private/licensed hooks** — OEM technical publications, IATA DGR and organization-private material
 
 The registry records official acquisition points rather than blindly committing regulator binaries into Git. See [`skills/aviation-document-intelligence/source-manifest-global.yaml`](skills/aviation-document-intelligence/source-manifest-global.yaml).
+
+### Shared aviation platform core ✅
+
+The core packages now provide common contracts rather than parallel scheme-specific models:
+
+```text
+aviation-domain
+      │
+      ├── organizations / aircraft / certificates / approvals
+      │
+      ├── regulatory-domain
+      │       └── authority / jurisdiction / version / applicability
+      │
+      ├── evidence-domain
+      │       └── documents / photos / records / provenance / access
+      │
+      ├── workflow-domain
+      │       └── regulated case state transitions
+      │
+      ├── inspection-domain
+      │       └── generic inspections + SAFA adapter
+      │
+      └── compliance-domain
+              └── requirements / assessments / evidence links
+```
+
+See [`docs/platform-core-services.md`](docs/platform-core-services.md).
 
 ### SAFA RAMP Intelligence ✅
 
@@ -146,7 +174,13 @@ aviation-intelligence/
 ├── apps/
 ├── services/
 ├── packages/
-│   └── aviation-document-intelligence/
+│   ├── aviation-document-intelligence/
+│   ├── aviation-domain/
+│   ├── regulatory-domain/
+│   ├── inspection-domain/
+│   ├── workflow-domain/
+│   └── evidence-domain/
+│       └── compliance-domain/
 ├── skills/
 │   ├── aviation-document-intelligence/
 │   └── safa-ramp-intelligence/
@@ -168,6 +202,7 @@ From the repository root:
 ```bash
 cd packages/aviation-document-intelligence
 pip install -r requirements.txt
+python -m pip install -e .
 ```
 
 Initialize a local index:
@@ -211,7 +246,7 @@ python -m aviation_docint.cli search \
   --db ../../data/docint.sqlite
 ```
 
-Run tests:
+Run Python tests:
 
 ```bash
 pytest -q packages/aviation-document-intelligence/tests
@@ -223,6 +258,19 @@ Build the public/source-managed corpus separately:
 python skills/aviation-document-intelligence/scripts/download_corpus.py \
   --manifest skills/aviation-document-intelligence/source-manifest-global.yaml \
   --output data/corpus
+```
+
+### .NET domain validation
+
+The shared domain packages target .NET 8:
+
+```bash
+dotnet build packages/aviation-domain/AviationIntelligence.AviationDomain.csproj
+dotnet build packages/regulatory-domain/AviationIntelligence.RegulatoryDomain.csproj
+dotnet build packages/inspection-domain/AviationIntelligence.InspectionDomain.csproj
+dotnet build packages/workflow-domain/AviationIntelligence.WorkflowDomain.csproj
+dotnet build packages/evidence-domain/AviationIntelligence.EvidenceDomain.csproj
+dotnet build packages/compliance-domain/AviationIntelligence.ComplianceDomain.csproj
 ```
 
 ### PostgreSQL / Redis local infrastructure
@@ -248,12 +296,16 @@ The local Compose stack is development infrastructure only. Production deploymen
 - [x] Evidence/provenance contract
 - [x] Reproducible source acquisition registry
 - [x] Temporal/applicability/knowledge-graph reference contracts
-- [ ] Strongly typed common aviation domain model
+- [x] Strongly typed common aviation core entities
+- [x] Shared evidence domain
+- [x] Regulated case transition engine
+- [x] Reference compliance assessment domain
+- [x] Generic inspection domain with scheme adapters
 - [ ] Production regulatory ingestion/versioning service
-- [ ] Generic evidence and records service
-- [ ] Workflow / case engine
-- [ ] Generic inspection / audit engine
-- [ ] Compliance assessment engine
+- [ ] Generic evidence and records persistence service
+- [ ] Workflow persistence/audit service
+- [ ] Generic inspection persistence service
+- [ ] Compliance rule execution service
 
 ### P1 — Regulatory and oversight reference platform
 
@@ -261,6 +313,7 @@ The local Compose stack is development infrastructure only. Production deploymen
 - [ ] KCAA organization and approval adapters
 - [ ] KCAA fee / payment model
 - [ ] KCAA surveillance model
+- [x] SAFA finding/action rule adapter
 - [ ] Complete SAFA/SACA operational workflow
 - [ ] Authority oversight / USOAP-style model
 - [ ] SSP / safety intelligence implementation
@@ -277,13 +330,14 @@ The local Compose stack is development infrastructure only. Production deploymen
 - [x] Local PostgreSQL/Redis development stack
 - [x] Object-storage abstraction
 - [x] Deterministic source-monitoring service
+- [x] Deterministic ingestion orchestration pipeline
 - [ ] Production object storage and large-corpus lifecycle
 - [ ] Production PDF/XML/OCR/table extraction workers
 - [ ] Managed lexical + vector search backend
 - [ ] Production semantic reranker
 - [ ] Production knowledge graph service deployment
-- [ ] Production temporal/version resolution
-- [ ] Production regulatory applicability engine
+- [ ] Production temporal/version resolution service
+- [ ] Production regulatory applicability engine deployment
 - [ ] Regulatory change-impact workflow
 - [ ] Scheduled source freshness and revision monitoring deployment
 - [ ] Inspector/compliance document workspace
@@ -339,6 +393,7 @@ Production evaluation should add expert-labeled gold evidence and score retrieva
 - [`docs/aviation-document-intelligence.md`](docs/aviation-document-intelligence.md)
 - [`docs/aviation-document-intelligence-production-hardening.md`](docs/aviation-document-intelligence-production-hardening.md)
 - [`docs/aviation-document-intelligence-sources.md`](docs/aviation-document-intelligence-sources.md)
+- [`docs/platform-core-services.md`](docs/platform-core-services.md)
 - [`skills/aviation-document-intelligence/`](skills/aviation-document-intelligence/)
 - [`skills/safa-ramp-intelligence/`](skills/safa-ramp-intelligence/)
 
@@ -361,4 +416,4 @@ This project is an engineering and research toolkit. It does not provide regulat
 
 ## Status
 
-🚧 **Active implementation.** The reference document-intelligence engine, global source registry, SAFA intelligence foundation, production-hardening contracts, PostgreSQL persistence, graph persistence, object-storage abstraction, source monitoring and local infrastructure are in place. Remaining work is primarily managed production search/storage, distributed document processing, domain-specific regulatory execution, expert evaluation and the broader regulated-system core.
+🚧 **Active implementation.** The reference document-intelligence engine, global source registry, SAFA intelligence foundation, shared domain core, compliance/evidence/workflow contracts, PostgreSQL persistence, graph persistence, object-storage abstraction, source monitoring and split Python/.NET CI are in place. Remaining work is primarily production-scale storage/search/processing, domain-specific regulatory execution, expert evaluation, governance/security and the broader authority workflow applications.
