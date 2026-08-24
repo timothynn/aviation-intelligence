@@ -1,14 +1,18 @@
 name: Test Aviation Document Intelligence
 
 on:
-  push:
-    paths:
-      - 'packages/aviation-document-intelligence/**'
-      - '.github/workflows/test-document-intelligence.yml'
   pull_request:
     paths:
       - 'packages/aviation-document-intelligence/**'
       - '.github/workflows/test-document-intelligence.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: document-intelligence-pr-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   test-document-intelligence:
