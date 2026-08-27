@@ -1,0 +1,51 @@
+name: Monitor Aviation Regulatory Sources
+
+on:
+  schedule:
+    - cron: '17 2 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: packages/aviation-document-intelligence/pyproject.toml
+
+      - name: Restore monitor state
+        uses: actions/cache/restore@v4
+        with:
+          path: .cache/source-monitor
+          key: aviation-source-monitor-${{ github.run_id }}
+          restore-keys: |
+            aviation-source-monitor-
+
+      - name: Install document intelligence
+        run: python -m pip install -e packages/aviation-document-intelligence
+
+      - name: Monitor registered source pages
+        run: |
+          python skills/aviation-document-intelligence/scripts/monitor_sources.py \
+            --manifest skills/aviation-document-intelligence/source-manifest-global.yaml \
+            --state .cache/source-monitor/snapshots.json \
+            --output source-monitor-report.json
+
+      - name: Save monitor state
+        uses: actions/cache/save@v4
+        with:
+          path: .cache/source-monitor
+          key: aviation-source-monitor-${{ github.run_id }}
+
+      - name: Upload source monitor report
+        uses: actions/upload-artifact@v4
+        with:
+          name: aviation-source-monitor-report
+          path: source-monitor-report.json

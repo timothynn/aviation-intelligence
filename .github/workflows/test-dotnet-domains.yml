@@ -1,0 +1,51 @@
+name: Test Aviation Domain Packages
+
+on:
+  pull_request:
+    paths:
+      - 'packages/aviation-domain/**'
+      - 'packages/regulatory-domain/**'
+      - 'packages/inspection-domain/**'
+      - 'packages/workflow-domain/**'
+      - 'packages/compliance-domain/**'
+      - '.github/workflows/test-dotnet-domains.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: dotnet-domains-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dotnet-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        shell: bash
+        run: |
+          for project in \
+            packages/aviation-domain/AviationIntelligence.AviationDomain.csproj \
+            packages/regulatory-domain/AviationIntelligence.RegulatoryDomain.csproj \
+            packages/inspection-domain/AviationIntelligence.InspectionDomain.csproj \
+            packages/workflow-domain/AviationIntelligence.WorkflowDomain.csproj \
+            packages/compliance-domain/AviationIntelligence.ComplianceDomain.csproj; do
+            dotnet restore "$project"
+          done
+
+      - name: Build
+        shell: bash
+        run: |
+          for project in \
+            packages/aviation-domain/AviationIntelligence.AviationDomain.csproj \
+            packages/regulatory-domain/AviationIntelligence.RegulatoryDomain.csproj \
+            packages/inspection-domain/AviationIntelligence.InspectionDomain.csproj \
+            packages/workflow-domain/AviationIntelligence.WorkflowDomain.csproj \
+            packages/compliance-domain/AviationIntelligence.ComplianceDomain.csproj; do
+            dotnet build "$project" --configuration Release --no-restore
+          done
