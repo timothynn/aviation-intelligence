@@ -61,7 +61,7 @@ sources:
     title: "Easy Access Rules for Aircrew"
     version: "Revision from November 2025"
     type: regulatory_consolidation
-    source_page: https://www.easa.europa.eu/en/document-library/easy-access-rules/easy-access-rules-aircrew
+    source_page: https://www.easa.europa.eu/en/document-library/easy-access-rules/easy-access-rules-aircrew-regulation-eu-no-11782011
     asset_types: [pdf, xml]
     local_test: true
     repo_binary: false
@@ -73,7 +73,7 @@ sources:
     title: "Easy Access Rules for Initial Airworthiness and Environmental Protection"
     version: "Revision from November 2025"
     type: regulatory_consolidation
-    source_page: https://www.easa.europa.eu/en/document-library/easy-access-rules/easy-access-rules-initial-airworthiness-and-environmental-protection
+    source_page: https://www.easa.europa.eu/en/document-library/easy-access-rules/easy-access-rules-initial-airworthiness-and-environmental
     asset_types: [pdf, xml]
     local_test: true
     repo_binary: false
@@ -85,7 +85,7 @@ sources:
     title: "Easy Access Rules for Ground Handling"
     version: "November 2025"
     type: regulatory_consolidation
-    source_page: https://www.easa.europa.eu/en/document-library/easy-access-rules/easy-access-rules-ground-handling
+    source_page: https://www.easa.europa.eu/en/document-library/easy-access-rules/easy-access-rules-ground-handling-gh-regulations-eu-202523-and
     asset_types: [pdf, xml]
     local_test: true
     repo_binary: false
@@ -97,7 +97,7 @@ sources:
     title: "Easy Access Rules for Information Security"
     version: "Revision from December 2025"
     type: regulatory_consolidation
-    source_page: https://www.easa.europa.eu/en/document-library/easy-access-rules/easy-access-rules-information-security
+    source_page: https://www.easa.europa.eu/en/document-library/easy-access-rules/easy-access-rules-information-security-regulations-eu-2023203-and-20221645
     asset_types: [pdf, xml]
     local_test: true
     repo_binary: false
@@ -207,7 +207,7 @@ sources:
     title: "AC 120-92D - Safety Management Systems for Aviation Service Providers"
     version: "2024-05-21"
     type: advisory_circular
-    source_page: https://www.faa.gov/regulations_policies/advisory_circulars/index.cfm/go/document.list
+    source_url: https://www.faa.gov/documentLibrary/media/Advisory_Circular/AC_120-92D_FAA_Web.pdf
     asset_types: [pdf]
     local_test: true
     repo_binary: false
@@ -299,9 +299,9 @@ sources:
     authority: UAE GCAA
     jurisdiction: UAE
     title: "CAR Part IV - Foreign Operators Regulation"
-    version: "Issue 01"
+    version: "Issue 02"
     type: foreign_operator_regulation
-    source_url: https://www.gcaa.gov.ae/en/epublication/EPublications/Civil%20Aviation%20Regulations%20%28CARs%29/CAR%20IV%20-%20FLIGHT%20OPERATIONS%20REGULATIONS/AIRCRAFT%20OPERATIONS/CAR%20PART%20IV%20-%20FOREIGN%20OPERATORS%20REGULATION%20%28FOR%29%20-%20ISSUE%201.pdf
+    source_url: https://www.gcaa.gov.ae/en/epublication/EPublications/Civil%20Aviation%20Regulations%20%28CARs%29/CAR%20IV%20-%20FLIGHT%20OPERATIONS%20REGULATIONS/AIRCRAFT%20OPERATIONS/CAR%20PART%20IV%20Foreign%20Operators%20Regulation%20(FOR)%20-%20ISSUE%2002.pdf
     asset_types: [pdf]
     local_test: true
     repo_binary: false
@@ -334,19 +334,25 @@ sources:
     jurisdiction: Australia
     title: "AC 139.A-04 - Applying for Aerodrome Authorisations, Exemptions and Approvals"
     type: advisory_circular
-    source_page: https://www.casa.gov.au/sites/default/files/2021-08/advisory-circular-139-a-04-applying-aerodrome-authorisations-exemptions-approvals.pdf
+    source_url: https://www.casa.gov.au/sites/default/files/2021-08/advisory-circular-139-a-04-applying-aerodrome-authorisations-exemptions-approvals.pdf
     asset_types: [pdf]
     local_test: true
     repo_binary: false
     policy: source_reference
 
-  - id: dgca-india-car-library
-    authority: DGCA India
-    jurisdiction: India
-    title: "DGCA Civil Aviation Requirements public library"
-    type: regulatory_library
-    source_page: https://www.dgca.gov.in/digigov-portal/
-    asset_types: [pdf]
-    local_test: true
-    repo_binary: false
-    policy: source_reference
+  # DGCA India CAR library - DISABLED: The DGCA portal (https://www.dgca.gov.in/digigov-portal/) 
+  # requires interactive navigation through a dynamic web interface to access individual CAR documents.
+  # The previous source_page pointed to an unrelated FTO ranking PDF. Individual CARs are accessible 
+  # via specific attachment URLs, but there is no single downloadable library page that the script 
+  # can scrape. To include DGCA CARs, individual CAR documents would need to be added as separate 
+  # sources with their specific attachment URLs.
+  # - id: dgca-india-car-library
+  #   authority: DGCA India
+  #   jurisdiction: India
+  #   title: "DGCA Civil Aviation Requirements public library"
+  #   type: regulatory_library
+  #   source_page: https://www.dgca.gov.in/digigov-portal/
+  #   asset_types: [pdf]
+  #   local_test: true
+  #   repo_binary: false
+  #   policy: source_reference

@@ -23,6 +23,7 @@ import mimetypes
 import os
 import re
 import sys
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -54,9 +55,31 @@ def safe_name(value: str) -> str:
     return value[:180] or "document"
 
 
+def request_with_retry(url: str, timeout: int = 60, max_retries: int = 3, stream: bool = False) -> requests.Response:
+    """Make HTTP request with exponential backoff retry for timeouts and 5xx errors."""
+    for attempt in range(max_retries):
+        try:
+            response = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=timeout, stream=stream)
+            response.raise_for_status()
+            return response
+        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as exc:
+            if attempt < max_retries - 1:
+                wait_time = 2 ** attempt
+                print(f"Timeout/connection error on attempt {attempt + 1}/{max_retries} for {url}, retrying in {wait_time}s...", file=sys.stderr)
+                time.sleep(wait_time)
+            else:
+                raise
+        except requests.exceptions.HTTPError as exc:
+            if exc.response.status_code >= 500 and attempt < max_retries - 1:
+                wait_time = 2 ** attempt
+                print(f"Server error {exc.response.status_code} on attempt {attempt + 1}/{max_retries} for {url}, retrying in {wait_time}s...", file=sys.stderr)
+                time.sleep(wait_time)
+            else:
+                raise
+
+
 def discover_links(page_url: str, desired_types: list[str], link_match: str | None = None) -> list[tuple[str, str, str]]:
-    response = requests.get(page_url, headers={"User-Agent": USER_AGENT}, timeout=60)
-    response.raise_for_status()
+    response = request_with_retry(page_url, timeout=60)
     soup = BeautifulSoup(response.text, "html.parser")
     matcher = re.compile(link_match, re.IGNORECASE) if link_match else None
     results: list[tuple[str, str, str]] = []
@@ -118,8 +141,7 @@ def download_one(source: Source, output_dir: Path, timeout: int = 120) -> list[d
     source_dir.mkdir(parents=True, exist_ok=True)
     metadata: list[dict[str, Any]] = []
     for kind, url, link_label in resolve_assets(record):
-        response = requests.get(url, headers={"User-Agent": USER_AGENT}, stream=True, timeout=timeout)
-        response.raise_for_status()
+        response = request_with_retry(url, timeout=timeout, stream=True)
         content_type = response.headers.get("content-type", "").split(";", 1)[0].lower()
         suffix = mimetypes.guess_extension(content_type) or ("." + kind)
         if suffix == ".jpe":
@@ -166,6 +188,8 @@ def main() -> int:
     parser.add_argument("--output", default="data/corpus")
     parser.add_argument("--only", action="append", default=[])
     parser.add_argument("--workers", type=int, default=4)
+    parser.add_argument("--failure-threshold", type=int, default=None, 
+                       help="Maximum allowed failures before exiting with error (default: fail if any source fails)")
     args = parser.parse_args()
 
     manifest = Path(args.manifest)
@@ -197,8 +221,16 @@ def main() -> int:
 
     if failures:
         (output_dir / "failures.json").write_text(json.dumps(failures, indent=2), encoding="utf-8")
-        print(f"Completed with {len(failures)} failures. See {output_dir / 'failures.json'}", file=sys.stderr)
-        return 2
+        failure_count = len(failures)
+        total_count = len(sources)
+        print(f"Completed with {failure_count}/{total_count} failures. See {output_dir / 'failures.json'}", file=sys.stderr)
+        
+        threshold = args.failure_threshold if args.failure_threshold is not None else 0
+        if failure_count > threshold:
+            print(f"Failure count {failure_count} exceeds threshold {threshold}", file=sys.stderr)
+            return 2
+        else:
+            print(f"Failure count {failure_count} within threshold {threshold}, continuing", file=sys.stderr)
 
     print(f"Downloaded {len(rows)} assets. Metadata: {metadata_path}")
     return 0
