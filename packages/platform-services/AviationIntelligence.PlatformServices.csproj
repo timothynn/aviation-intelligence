@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>AviationIntelligence.PlatformServices</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="tests/**/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../aviation-domain/AviationIntelligence.AviationDomain.csproj" />
+    <ProjectReference Include="../regulatory-domain/AviationIntelligence.RegulatoryDomain.csproj" />
+    <ProjectReference Include="../evidence-domain/AviationIntelligence.EvidenceDomain.csproj" />
+  </ItemGroup>
+</Project>
