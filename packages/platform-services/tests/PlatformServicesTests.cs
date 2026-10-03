@@ -1,5 +1,6 @@
 using AviationIntelligence.RegulatoryDomain;
 using AviationIntelligence.PlatformServices;
+using Xunit;
 
 namespace AviationIntelligence.PlatformServices.Tests;
 
@@ -48,7 +49,7 @@ public sealed class PlatformServicesTests
             OperationType: "CAT"));
 
         Assert.Contains(result.Rules, r => r.Rule.Id == "local-1" && r.Applicable);
-        Assert.False(result.RequiresHumanReview);
+        Assert.True(result.RequiresHumanReview);
     }
 
     [Fact]

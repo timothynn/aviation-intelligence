@@ -19,3 +19,10 @@ venv/
 .env
 .env.*
 !.env.example
+
+# .NET build artifacts
+bin/
+obj/
+*.user
+*.suo
+TestResults/
